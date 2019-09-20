@@ -1,0 +1,62 @@
+﻿<UserControl x:Class="DecimalDefControl"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:iqb.mdc.admin"
+             mc:Ignorable="d" 
+             d:DesignHeight="50" d:DesignWidth="200">
+    <StackPanel DataContext="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ScrollViewer}}, Path=DataContext}">
+        <StackPanel.Resources>
+            <local:XMDDefTypeSpecConverter x:Key="XMDDefTypeSpecConverter"/>
+        </StackPanel.Resources>
+        <Grid DataContext="{Binding Converter={StaticResource XMDDefTypeSpecConverter}, ConverterParameter=Min, Mode=OneWay}">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="1*"/>
+                <ColumnDefinition Width="1*"/>
+            </Grid.ColumnDefinitions>
+            <TextBlock VerticalAlignment="Center" Grid.Column="0" Text="Minimalwert"/>
+            <TextBox VerticalAlignment="Center" Grid.Column="1">
+                <TextBox.Text>
+                    <Binding Path="Value" Mode="TwoWay">
+                        <Binding.ValidationRules>
+                            <local:DecimalValidationRule></local:DecimalValidationRule>
+                        </Binding.ValidationRules>
+                    </Binding>
+                </TextBox.Text>
+            </TextBox>
+        </Grid>
+        <Grid DataContext="{Binding Converter={StaticResource XMDDefTypeSpecConverter}, ConverterParameter=Max, Mode=OneWay}">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="1*"/>
+                <ColumnDefinition Width="1*"/>
+            </Grid.ColumnDefinitions>
+            <TextBlock VerticalAlignment="Center" Grid.Column="0" Text="Maximalwert"/>
+            <TextBox VerticalAlignment="Center" Grid.Column="1">
+                <TextBox.Text>
+                    <Binding Path="Value" Mode="TwoWay">
+                        <Binding.ValidationRules>
+                            <local:DecimalValidationRule></local:DecimalValidationRule>
+                        </Binding.ValidationRules>
+                    </Binding>
+                </TextBox.Text>
+            </TextBox>
+        </Grid>
+        <Grid DataContext="{Binding Converter={StaticResource XMDDefTypeSpecConverter}, ConverterParameter=Digits, Mode=OneWay}">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="1*"/>
+                <ColumnDefinition Width="1*"/>
+            </Grid.ColumnDefinitions>
+            <TextBlock VerticalAlignment="Center" Grid.Column="0" Text="Anzahl Dezimalstellen"/>
+            <TextBox VerticalAlignment="Center" Grid.Column="1">
+                <TextBox.Text>
+                    <Binding Path="Value" Mode="TwoWay">
+                        <Binding.ValidationRules>
+                            <local:IntegerValidationRule></local:IntegerValidationRule>
+                        </Binding.ValidationRules>
+                    </Binding>
+                </TextBox.Text>
+            </TextBox>
+        </Grid>
+    </StackPanel>
+</UserControl>

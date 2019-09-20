@@ -1,0 +1,76 @@
+﻿<UserControl x:Class="ListDefControl"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:iqb.mdc.admin"
+             xmlns:comp="clr-namespace:iqb.lib.components;assembly=iqblib-components"
+             xmlns:mdccomp="clr-namespace:iqb.mdc.components;assembly=iqbmdc-components"
+             xmlns:mdcxml="clr-namespace:iqb.mdc.xml;assembly=iqbmdc-xml"
+             mc:Ignorable="d" 
+             d:DesignHeight="50" d:DesignWidth="200">
+    <StackPanel DataContext="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ScrollViewer}}, Path=DataContext}" Name="StPRoot">
+        <StackPanel.Resources>
+            <local:XMDDefTypeSpecConverter x:Key="XMDDefTypeSpecConverter"/>
+            <ObjectDataProvider x:Key="MDCFactory" ObjectType="{x:Type mdcxml:MDCFactory}" />
+        </StackPanel.Resources>
+        <Grid DataContext="{Binding Converter={StaticResource XMDDefTypeSpecConverter}, ConverterParameter=ListControl, Mode=OneWay}">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="1*"/>
+                <ColumnDefinition Width="2*"/>
+            </Grid.ColumnDefinitions>
+            <TextBlock VerticalAlignment="Center" Text="Darstellung" Grid.Column="0"/>
+            <ComboBox ItemsSource="{Binding Source={StaticResource MDCFactory}, Path=MDListTypes}" Grid.Column="1"
+                                            DisplayMemberPath="Value"
+                                            SelectedValuePath="Key"
+                                            SelectedValue="{Binding Value}"/>
+        </Grid>
+        <GroupBox Header="Listenwerte">
+            <GroupBox.Resources>
+                <comp:IntegerBooleanGreaterThen0Converter x:Key="IntegerBooleanGreaterThen0Converter"/>
+                <comp:BooleanReverseConverter x:Key="BooleanReverseConverter"/>
+                <comp:BooleanNotVisibilityConverter x:Key="BooleanNotVisibilityConverter"/>
+                <comp:BooleanVisibilityConverter x:Key="BooleanVisibilityConverter"/>
+                <comp:BooleanXmlStringConverter x:Key="BooleanXmlStringConverter"/>
+            </GroupBox.Resources>
+            <DockPanel>
+                <DockPanel DockPanel.Dock="Top" LastChildFill="False">
+                    <comp:ButtonNewSmall Click="BtnAddValue_Click" ToolTip="Neuer Merkmalswert"/>
+                    <comp:ButtonDeleteSmall Click="BtnDeleteValue_Click" ToolTip="Merkmalswert löschen"
+                                                        IsEnabled="{Binding ElementName=LBValues, Path=SelectedItems.Count, Converter={StaticResource IntegerBooleanGreaterThen0Converter}}"/>
+                    <comp:ButtonUpArrowSmall Click="BtnMoveUpValue_Click" ToolTip="Merkmalswert nach oben verschieben"
+                                                        IsEnabled="{Binding ElementName=LBValues, Path=SelectedItems.Count, Converter={StaticResource IntegerBooleanGreaterThen0Converter}}"/>
+                    <comp:ButtonDownArrowSmall Click="BtnMoveDownValue_Click" ToolTip="Merkmalswert nach unten verschieben"
+                                                        IsEnabled="{Binding ElementName=LBValues, Path=SelectedItems.Count, Converter={StaticResource IntegerBooleanGreaterThen0Converter}}"/>
+                </DockPanel>
+                <ListBox x:Name="LBValues" ItemsSource="{Binding Elements[Value]}"
+                         ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+                     Margin="0 2 0 2" SelectionMode="Single" HorizontalContentAlignment="Stretch" SelectedValuePath="Attribute[id].Value">
+                    <ListBox.ItemContainerStyle>
+                        <Style TargetType="{x:Type ListBoxItem}">
+                            <Style.Triggers>
+                                <Trigger Property="IsKeyboardFocusWithin" Value="True">
+                                    <Setter Property="IsSelected" Value="True"/>
+                                </Trigger>
+                            </Style.Triggers>
+                        </Style>
+                    </ListBox.ItemContainerStyle>
+                    <ListBox.ItemTemplate>
+                        <DataTemplate>
+                            <StackPanel>
+                                <Grid Margin="0 0 0 5">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="50"/>
+                                        <ColumnDefinition Width="*"/>
+                                    </Grid.ColumnDefinitions>
+                                    <TextBox IsReadOnly="True" Text="{Binding Attribute[id].Value}" VerticalAlignment="Top" Grid.Column="0"/>
+                                    <mdccomp:TextMultiLanguageControl XMD="{Binding}" Languages="de en" TagFilter="Label" Grid.Column="1"/>
+                                </Grid>
+                            </StackPanel>
+                        </DataTemplate>
+                    </ListBox.ItemTemplate>
+                </ListBox>
+            </DockPanel>
+        </GroupBox>
+    </StackPanel>
+</UserControl>
