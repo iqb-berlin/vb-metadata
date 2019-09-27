@@ -19,4 +19,11 @@
         {"combobox", "Klappbox"},
         {"expandable", "Kompakt mit Erweiterungsschalter"}}
 
+    Public Function ResolveCatSource(catId As String, catVersion As String, source As String) As String
+        Dim myreturn As String = ""
+
+
+
+        Return myreturn
+    End Function
 End Class

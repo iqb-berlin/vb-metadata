@@ -1,4 +1,6 @@
 ﻿Imports iqb.lib.components
+Imports Newtonsoft.Json
+
 Class MainWindow
     Public Shared ReadOnly ClearSearchString As RoutedUICommand = New RoutedUICommand("Filter löschen", "ClearSearchString", GetType(MainWindow))
 
@@ -78,6 +80,7 @@ Class MainWindow
         CommandBindings.Add(New CommandBinding(AppCommands.EditCatMetadata, AddressOf HandleEditCatMetadataExecuted, AddressOf HandleCatLoadedCanExecute))
         CommandBindings.Add(New CommandBinding(AppCommands.SaveAs, AddressOf HandleSaveAsExecuted, AddressOf HandleCatLoadedCanExecute))
         CommandBindings.Add(New CommandBinding(AppCommands.OpenWebCat, AddressOf HandleOpenWebCatExecuted))
+        If iqb.lib.windows.ADFactory.GetMyName() = "mechtelm" Then CommandBindings.Add(New CommandBinding(AppCommands.SaveTheWorld, AddressOf HandleSaveTheWorldExecuted))
 
         ApplicationCommands.Open.Execute(Nothing, Nothing)
     End Sub
@@ -137,8 +140,7 @@ Class MainWindow
     End Sub
     Private Sub Me_Closing(ByVal sender As Object, ByVal e As System.ComponentModel.CancelEventArgs) Handles Me.Closing
         If XDocMCatChanged AndAlso
-            DialogFactory.YesNoCancel(Me, My.Application.Info.AssemblyName, "Der Katalog wurde geändert. Soll er vor dem Schließen gespeichert werden?") Then
-
+            DialogFactory.YesNo(Me, My.Application.Info.AssemblyName, "Der Katalog wurde geändert. Soll er vor dem Schließen gespeichert werden?") = vbOK Then
             ApplicationCommands.Save.Execute(Nothing, Nothing)
         End If
     End Sub
@@ -264,26 +266,79 @@ Class MainWindow
                 My.Settings.last_webcat = WebCatAddr
                 My.Settings.Save()
 
-                Try
-                    If XDocMCat IsNot Nothing Then
-                        RemoveHandler XDocMCat.Root.Changed, AddressOf Notify_XDocMCatChanged
+                Dim newAppTitle As String = My.Application.Info.AssemblyName + " - "
+
+                Dim WebCatAddr_splits As String() = WebCatAddr.Split({":"}, StringSplitOptions.RemoveEmptyEntries)
+                If WebCatAddr_splits.Count > 1 Then
+                    Dim prefix As String = WebCatAddr_splits(0).ToUpper
+                    If prefix = "DOI" Then
+                        Using client As New Net.WebClient()
+                            Try
+                                Dim responseString As String = client.DownloadString("https://doi.org/api/handles/" + WebCatAddr_splits(1))
+                                Dim responseObject As Linq.JObject = JsonConvert.DeserializeObject(responseString)
+                                For Each o As Linq.JObject In From i In responseObject("values")
+                                    If o("type") = "URL" Then
+                                        WebCatAddr = o("data")("value")
+                                        Exit For
+                                    End If
+                                Next
+                                newAppTitle = newAppTitle + WebCatAddr + " (" + WebCatAddr_splits(1) + ")"
+                            Catch ex As Exception
+                                WebCatAddr = Nothing
+                                DialogFactory.MsgError(Me, "MD-Katalog öffnen", "Konnte DOI nicht auflösen:" + vbNewLine + ex.Message)
+                            End Try
+                        End Using
+                    Else
+                        newAppTitle = newAppTitle + WebCatAddr
                     End If
-                    Using client As New Net.WebClient()
-                        Using mstream As New IO.MemoryStream(client.DownloadData(WebCatAddr))
-                            Using xmlR As System.Xml.XmlReader = System.Xml.XmlReader.Create(mstream)
-                                XDocMCat = XDocument.Load(xmlR)
+                Else
+                    newAppTitle = newAppTitle + WebCatAddr
+                End If
+                If Not String.IsNullOrEmpty(WebCatAddr) Then
+                    Try
+                        If XDocMCat IsNot Nothing Then
+                            RemoveHandler XDocMCat.Root.Changed, AddressOf Notify_XDocMCatChanged
+                        End If
+                        Using client As New Net.WebClient()
+                            Using mstream As New IO.MemoryStream(client.DownloadData(WebCatAddr))
+                                Using xmlR As System.Xml.XmlReader = System.Xml.XmlReader.Create(mstream)
+                                    XDocMCat = XDocument.Load(xmlR)
+                                End Using
                             End Using
                         End Using
-                    End Using
-                    AddHandler XDocMCat.Root.Changed, AddressOf Notify_XDocMCatChanged
-                    XDocMCatChanged = False
-                    XDocMCatFilename = Nothing
-                    Me.Title = My.Application.Info.AssemblyName + " - " + WebCatAddr
-                    LoadMDDefList()
-                Catch ex As Exception
-                    DialogFactory.MsgError(Me, "MD-Katalog öffnen", "Konnte Datei nicht öffnen:" + vbNewLine + ex.Message)
-                End Try
+                        AddHandler XDocMCat.Root.Changed, AddressOf Notify_XDocMCatChanged
+                        XDocMCatChanged = False
+                        XDocMCatFilename = Nothing
+                        Me.Title = newAppTitle
+                        LoadMDDefList()
+                    Catch ex As Exception
+                        DialogFactory.MsgError(Me, "MD-Katalog öffnen", "Konnte Datei nicht öffnen:" + vbNewLine + ex.Message)
+                    End Try
+                End If
             End If
+        End If
+    End Sub
+
+    Private Sub HandleSaveTheWorldExecuted(ByVal sender As Object, ByVal e As ExecutedRoutedEventArgs)
+        Dim doi As String = DialogFactory.InputText(Me, "DOI-Check", "Bitte DOI eingeben", My.Settings.last_savetheworld, "")
+        If Not String.IsNullOrEmpty(doi) Then
+            My.Settings.last_savetheworld = doi
+            My.Settings.Save()
+
+            Dim myResponse As String = "?"
+            Using client As New Net.WebClient()
+                Try
+                    Dim responseString As String = client.DownloadString("https://doi.org/api/handles/" + doi)
+                    Dim responseObject As Linq.JObject = JsonConvert.DeserializeObject(responseString)
+                    For Each o As Linq.JObject In From i In responseObject("values")
+                        If o("type") = "URL" Then myResponse = o("data")("value")
+                    Next
+                Catch ex As Exception
+                    myResponse = ex.Message
+                End Try
+            End Using
+
+            DialogFactory.Msg(Me, "DOI-Check", "Antwort: " + vbNewLine + myResponse)
         End If
     End Sub
 

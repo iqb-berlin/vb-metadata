@@ -6,7 +6,7 @@
         Icon="pack://application:,,,/iqblib-components;component/Resources/iqbGrau.ico"
         ShowInTaskbar="False" 
         WindowStartupLocation="CenterOwner"
-        Title="Kerndaten des Katalogs ändern" Height="300" Width="500">
+        Title="Kerndaten des Katalogs ändern" Height="700" Width="500">
     <Window.Resources>
         <ResourceDictionary Source="pack://application:,,,/iqblib-components;component/GlobalStyles.xaml"/>
     </Window.Resources>
@@ -38,6 +38,10 @@
             <DockPanel>
                 <TextBlock Width="100" VerticalAlignment="Center">Lizenz</TextBlock>
                 <TextBox Text="{Binding Element[License].Value}"/>
+            </DockPanel>
+            <DockPanel>
+                <TextBlock Width="100" VerticalAlignment="Center">Version-History</TextBlock>
+                <TextBox Text="{Binding Attribute[versionhistory].Value}"/>
             </DockPanel>
 
         </StackPanel>

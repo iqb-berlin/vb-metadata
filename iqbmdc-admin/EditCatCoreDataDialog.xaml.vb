@@ -5,6 +5,7 @@
         If XCat Is Nothing Then
             Me.StPRoot.IsEnabled = False
         Else
+            If String.IsNullOrEmpty(XCat.Root.@versionhistory) Then XCat.Root.@versionhistory = ""
             Me.StPRoot.DataContext = XCat.Root
         End If
     End Sub
