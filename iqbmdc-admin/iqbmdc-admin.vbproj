@@ -73,6 +73,9 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="AppCommands.vb" />
+    <Compile Include="TestMDControlsDialog.xaml.vb">
+      <DependentUpon>TestMDControlsDialog.xaml</DependentUpon>
+    </Compile>
     <Compile Include="EditCatCoreDataDialog.xaml.vb">
       <DependentUpon>EditCatCoreDataDialog.xaml</DependentUpon>
     </Compile>
@@ -94,6 +97,10 @@
       <DependentUpon>UnknownTypeDefControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="typecontrols\ValidationRules.vb" />
+    <Page Include="TestMDControlsDialog.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
     <Page Include="EditCatCoreDataDialog.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>

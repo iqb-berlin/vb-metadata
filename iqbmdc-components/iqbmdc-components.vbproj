@@ -61,14 +61,75 @@
     <Reference Include="System.Net.Http" />
   </ItemGroup>
   <ItemGroup>
-    <Page Include="mdcontrols\TextMultiLanguageControl.xaml">
+    <Compile Include="Converters.vb" />
+    <Compile Include="MDListControl.xaml.vb">
+      <DependentUpon>MDListControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="MDContainerBasisControl.vb" />
+    <Compile Include="MDTemplateSelector.vb" />
+    <Compile Include="RWControls\TextMultiLanguageEditControl.xaml.vb">
+      <DependentUpon>TextMultiLanguageEditControl.xaml</DependentUpon>
+    </Compile>
+    <Page Include="MDListControl.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Compile Include="mdcontrols\Converters.vb" />
-    <Compile Include="mdcontrols\TextMultiLanguageControl.xaml.vb">
+    <Page Include="ROControls\FileLinkShowControl.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="ROControls\FolderLinkShowControl.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="ROControls\AnyShowControl.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="ROControls\BooleanShowControl.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="LinkControl.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="ROControls\TextMultiLanguageShowControl.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="RWControls\TextMultiLanguageControl.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Compile Include="ROControls\FileLinkShowControl.xaml.vb">
+      <DependentUpon>FileLinkShowControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="ROControls\FolderLinkShowControl.xaml.vb">
+      <DependentUpon>FolderLinkShowControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="ROControls\AnyShowControl.xaml.vb">
+      <DependentUpon>AnyShowControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="ROControls\BooleanShowControl.xaml.vb">
+      <DependentUpon>BooleanShowControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="ROControls\Converters.vb" />
+    <Compile Include="LinkControl.xaml.vb">
+      <DependentUpon>LinkControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="MDBasisControl.vb" />
+    <Compile Include="ROControls\TextMultiLanguageShowControl.xaml.vb">
+      <DependentUpon>TextMultiLanguageShowControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="RWControls\Converters.vb" />
+    <Compile Include="RWControls\TextMultiLanguageControl.xaml.vb">
       <DependentUpon>TextMultiLanguageControl.xaml</DependentUpon>
     </Compile>
+    <Page Include="RWControls\TextMultiLanguageEditControl.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
   </ItemGroup>
   <ItemGroup>
     <Import Include="System.Threading.Tasks" />
@@ -117,7 +178,15 @@
     <PackageReference Include="iqblib-components">
       <Version>1.0.0.1</Version>
     </PackageReference>
+    <PackageReference Include="Newtonsoft.Json">
+      <Version>12.0.2</Version>
+    </PackageReference>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <ProjectReference Include="..\iqbmdc-xml\iqbmdc-xml.vbproj">
+      <Project>{08ef84a8-1898-408f-83b5-23ddddaab618}</Project>
+      <Name>iqbmdc-xml</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.VisualBasic.targets" />
 </Project>

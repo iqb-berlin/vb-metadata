@@ -80,6 +80,7 @@ Class MainWindow
         CommandBindings.Add(New CommandBinding(AppCommands.EditCatMetadata, AddressOf HandleEditCatMetadataExecuted, AddressOf HandleCatLoadedCanExecute))
         CommandBindings.Add(New CommandBinding(AppCommands.SaveAs, AddressOf HandleSaveAsExecuted, AddressOf HandleCatLoadedCanExecute))
         CommandBindings.Add(New CommandBinding(AppCommands.OpenWebCat, AddressOf HandleOpenWebCatExecuted))
+        CommandBindings.Add(New CommandBinding(AppCommands.TestMDControls, AddressOf HandleTestMDControlsExecuted))
         If iqb.lib.windows.ADFactory.GetMyName() = "mechtelm" Then CommandBindings.Add(New CommandBinding(AppCommands.SaveTheWorld, AddressOf HandleSaveTheWorldExecuted))
 
         ApplicationCommands.Open.Execute(Nothing, Nothing)
@@ -317,6 +318,11 @@ Class MainWindow
                 End If
             End If
         End If
+    End Sub
+
+    Private Sub HandleTestMDControlsExecuted(ByVal sender As Object, ByVal e As ExecutedRoutedEventArgs)
+        Dim myDlg As New TestMDControlsDialog With {.Owner = Me}
+        myDlg.ShowDialog()
     End Sub
 
     Private Sub HandleSaveTheWorldExecuted(ByVal sender As Object, ByVal e As ExecutedRoutedEventArgs)

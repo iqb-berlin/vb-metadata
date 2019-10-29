@@ -1,0 +1,34 @@
+﻿<Window x:Class="TestMDControlsDialog"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:mdccomp="clr-namespace:iqb.mdc.components;assembly=iqbmdc-components"
+        
+        Icon="pack://application:,,,/iqblib-components;component/Resources/iqbGrau.ico"
+        ShowInTaskbar="False" 
+        WindowStartupLocation="CenterOwner"
+        Title="Eingabe-Elemente prüfen" Height="600" Width="700">
+    <Window.Resources>
+        <ResourceDictionary Source="pack://application:,,,/iqblib-components;component/GlobalStyles.xaml"/>
+    </Window.Resources>
+    <DockPanel>
+        <ItemsControl Style="{StaticResource gsDialogBoxFooter}" DockPanel.Dock="Bottom" ItemContainerStyle="{StaticResource gsDialogBoxFooterButton}">
+            <Button Name="BtnOK" IsDefault="True">Schließen</Button>
+        </ItemsControl>
+        <Grid Margin="10">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="1*"/>
+                <ColumnDefinition Width="1*"/>
+            </Grid.ColumnDefinitions>
+            <DockPanel Grid.Column="0" Margin="0 0 5 0">
+                <TextBlock DockPanel.Dock="Top" Margin="0 0 0 5">Metadaten-XML eingeben:</TextBlock>
+                <TextBox TextWrapping="Wrap" ScrollViewer.HorizontalScrollBarVisibility="Disabled" ScrollViewer.VerticalScrollBarVisibility="Auto" AcceptsReturn="True"
+                         Name="TBXML"
+                         TextChanged="TBXML_Changed"/>
+            </DockPanel>
+            <DockPanel Grid.Column="1">
+                
+            </DockPanel>
+            <GridSplitter Width="5" Grid.Column="0"/>
+        </Grid>
+    </DockPanel>
+</Window>

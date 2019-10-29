@@ -1,0 +1,11 @@
+﻿<local:MDBasisControl x:Class="AnyShowControl"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:local="clr-namespace:iqb.mdc.components">
+    <local:MDBasisControl.Resources>
+        <local:MDValueToStringConverter x:Key="MDValueToStringConverter"/>
+    </local:MDBasisControl.Resources>
+    <TextBlock Text="{Binding RelativeSource={RelativeSource AncestorType={x:Type local:MDBasisControl}}, Path=MD, Converter={StaticResource MDValueToStringConverter}}" 
+               TextWrapping="Wrap" Margin="0 2 0 0" />
+</local:MDBasisControl>

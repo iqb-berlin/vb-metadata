@@ -31,6 +31,8 @@
                     <MenuItem Command="local:AppCommands.SaveAs"/>
                     <MenuItem Command="local:AppCommands.OpenWebCat"/>
                     <MenuItem Command="local:AppCommands.EditCatMetadata"/>
+                    <Separator/>
+                    <MenuItem Command="local:AppCommands.TestMDControls"/>
                 </MenuItem>
             </Menu>
         </DockPanel>
