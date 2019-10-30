@@ -1,4 +1,4 @@
-﻿<local:MDBasisControl x:Class="TextMultiLanguageEditControl"
+﻿<local:MDBasisControl x:Class="TextMultiLanguageShowControl"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
             xmlns:comp="clr-namespace:iqb.lib.components;assembly=iqblib-components"
@@ -7,20 +7,9 @@
         <StackPanel.Resources>
             <local:XLanguageAttributePolygonPointsConverter x:Key="XLanguageAttributePolygonPointsConverter"/>
             <local:XLanguageAttribute2LettersConverter x:Key="XLanguageAttribute2LettersConverter"/>
-            <local:XTextLanguagePropMergeConverter x:Key="XTextLanguagePropMergeConverter"/>
-            <local:BooleanTextWrapConverter x:Key="BooleanTextWrapConverter"/>
-            <CollectionViewSource x:Key="CVSMDList">
-                <CollectionViewSource.Source>
-                    <MultiBinding Converter="{StaticResource XTextLanguagePropMergeConverter}" UpdateSourceTrigger="PropertyChanged">
-                        <Binding RelativeSource="{RelativeSource Mode=FindAncestor, AncestorType={x:Type local:TextMultiLanguageEditControl}}" 
-                             Path="XMD" />
-                        <Binding RelativeSource="{RelativeSource Mode=FindAncestor, AncestorType={x:Type local:TextMultiLanguageEditControl}}" 
-                             Path="Languages" Mode="OneWay"/>
-                    </MultiBinding>
-                </CollectionViewSource.Source>
-            </CollectionViewSource>
-            <comp:BooleanVisibilityConverter x:Key="BooleanVisibilityConverter"/>
-            <comp:BooleanNotVisibilityConverter x:Key="BooleanNotVisibilityConverter"/>
+            <local:TextMultiLangMergeConverter x:Key="TextMultiLangMergeConverter"/>
+            <local:TypeSpecTextWrappingConverter x:Key="TypeSpecTextWrappingConverter"/>
+            <CollectionViewSource x:Key="CVSMDList" Source="{Binding Converter={StaticResource TextMultiLangMergeConverter}, UpdateSourceTrigger=PropertyChanged, Mode=OneWay}"/>
         </StackPanel.Resources>
         <ItemsControl ItemsSource="{Binding Source={StaticResource CVSMDList}}" Focusable="False">
             <ItemsControl.ItemTemplate>
@@ -40,9 +29,8 @@
                             </TextBlock>
                         </Grid>
 
-                        <TextBox Text="{Binding Value}"
-                                 TextWrapping="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type local:TextMultiLanguageEditControl}}, Path=Multiline, Converter={StaticResource BooleanTextWrapConverter}}"
-                                 AcceptsReturn="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type local:TextMultiLanguageEditControl}}, Path=Multiline}"/>
+                        <TextBlock Text="{Binding Value}" 
+                                 TextWrapping="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type local:TextMultiLanguageShowControl}}, Path=DataContext.TypeSpec, Converter={StaticResource TypeSpecTextWrappingConverter}}"/>
                     </DockPanel>
                 </DataTemplate>
             </ItemsControl.ItemTemplate>

@@ -54,7 +54,7 @@
     '    Return myreturn
     'End Function
 
-    Public Function GetMDObject(XMD As XElement) As MDObject
+    Public Function GetMDObject(ByRef XMD As XElement) As MDObject
         Dim myreturn As MDObject = Nothing
         If XMD IsNot Nothing AndAlso MDDefs.ContainsKey(XMD.@def) Then myreturn = New MDObject(XMD, MDDefs.Item(XMD.@def))
 

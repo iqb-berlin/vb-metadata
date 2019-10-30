@@ -7,6 +7,6 @@
         <local:MDValueToBooleanPathConverter x:Key="MDValueToBooleanPathConverter" />
     </local:MDBasisControl.Resources>
     <Path Width="11" Height="11" SnapsToDevicePixels="False" Stroke="Black" StrokeThickness="2"
-          Data="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type local:MDBasisControl}}, Path=MD, Converter={StaticResource MDValueToBooleanPathConverter}}" 
+          Data="{Binding Converter={StaticResource MDValueToBooleanPathConverter}}" 
           HorizontalAlignment="Left"/>
 </local:MDBasisControl>

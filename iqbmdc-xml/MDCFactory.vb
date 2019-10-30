@@ -110,7 +110,7 @@ Public Class MDCFactory
     '    Return myreturn
     'End Function
 
-    Public Shared Function GetMDObject(XMD As XElement) As MDObject
+    Public Shared Function GetMDObject(ByRef XMD As XElement) As MDObject
         Dim myreturn As MDObject = Nothing
         Dim catId As String = XMD.@cat
         Dim myCat As MDCat = MDCFactory.GetMDC(catId)

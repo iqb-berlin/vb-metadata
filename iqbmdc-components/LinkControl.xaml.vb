@@ -1,6 +1,7 @@
-﻿Imports iqb.lib.components
+﻿Imports System.ComponentModel
+Imports iqb.lib.components
 
-Public MustInherit Class LinkControl
+Public Class LinkControl
     Public Shared ReadOnly LinkProperty As DependencyProperty = DependencyProperty.Register("Link", GetType(String), GetType(LinkControl), New FrameworkPropertyMetadata() With {.BindsTwoWayByDefault = False})
     Public Property Link As String
         Get
@@ -18,6 +19,16 @@ Public MustInherit Class LinkControl
         End Get
         Set(ByVal value As String)
             SetValue(LinkTypeProperty, value)
+        End Set
+    End Property
+
+    Private Shared _LastLink As String
+    Public Shared Property LastLink As String
+        Get
+            Return _LastLink
+        End Get
+        Set(ByVal value As String)
+            _LastLink = value
         End Set
     End Property
 

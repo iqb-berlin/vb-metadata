@@ -73,11 +73,15 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="AppCommands.vb" />
+    <Compile Include="Converters.vb" />
     <Compile Include="TestMDControlsDialog.xaml.vb">
       <DependentUpon>TestMDControlsDialog.xaml</DependentUpon>
     </Compile>
     <Compile Include="EditCatCoreDataDialog.xaml.vb">
       <DependentUpon>EditCatCoreDataDialog.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="TextMultiLanguageControl.xaml.vb">
+      <DependentUpon>TextMultiLanguageControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="typecontrols\Converters.vb" />
     <Compile Include="typecontrols\ListDefControl.xaml.vb">
@@ -117,6 +121,10 @@
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Page Include="TextMultiLanguageControl.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
     <Page Include="typecontrols\ListDefControl.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>

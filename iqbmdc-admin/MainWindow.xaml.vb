@@ -83,7 +83,10 @@ Class MainWindow
         CommandBindings.Add(New CommandBinding(AppCommands.TestMDControls, AddressOf HandleTestMDControlsExecuted))
         If iqb.lib.windows.ADFactory.GetMyName() = "mechtelm" Then CommandBindings.Add(New CommandBinding(AppCommands.SaveTheWorld, AddressOf HandleSaveTheWorldExecuted))
 
-        ApplicationCommands.Open.Execute(Nothing, Nothing)
+        AppCommands.TestMDControls.Execute(Nothing, Nothing)
+
+        'ApplicationCommands.Open.Execute(Nothing, Nothing)
+
     End Sub
 
     Private Sub MyUnhandledExceptionEventHandler(sender As Object, e As UnhandledExceptionEventArgs)

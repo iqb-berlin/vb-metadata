@@ -64,7 +64,7 @@
                                         <ColumnDefinition Width="*"/>
                                     </Grid.ColumnDefinitions>
                                     <TextBox IsReadOnly="True" Text="{Binding Attribute[id].Value}" VerticalAlignment="Top" Grid.Column="0"/>
-                                    <mdccomp:TextMultiLanguageControl XMD="{Binding}" Languages="de en" TagFilter="Label" Grid.Column="1"/>
+                                    <local:TextMultiLanguageControl XMD="{Binding}" Languages="de en" TagFilter="Label" Grid.Column="1"/>
                                 </Grid>
                             </StackPanel>
                         </DataTemplate>

@@ -85,13 +85,13 @@
                         </StackPanel>
                         <DockPanel DockPanel.Dock="Top">
                             <TextBlock Width="100" VerticalAlignment="Center">Name</TextBlock>
-                            <mdccomp:TextMultiLanguageControl XMD="{Binding}" Languages="de en" TagFilter="Label"/>
+                            <local:TextMultiLanguageControl XMD="{Binding}" Languages="de en" TagFilter="Label"/>
                         </DockPanel>
                         <ScrollViewer HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Auto">
                             <StackPanel>
                                 <DockPanel>
                                     <TextBlock Width="100" VerticalAlignment="Center">Beschreibung</TextBlock>
-                                    <mdccomp:TextMultiLanguageControl XMD="{Binding}" Languages="de en" TagFilter="Description" Multiline="True"/>
+                                    <local:TextMultiLanguageControl XMD="{Binding}" Languages="de en" TagFilter="Description" Multiline="True"/>
                                 </DockPanel>
                                 <DockPanel>
                                     <TextBlock Width="100" VerticalAlignment="Center">Typ</TextBlock>

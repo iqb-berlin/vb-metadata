@@ -1,11 +1,17 @@
 ﻿Public Class MDObject
-    Public XMD As XElement
-    Public XMDDef As XElement
+    Private _XMD As XElement
+    Public ReadOnly Property XMD As XElement
+        Get
+            Return _XMD
+        End Get
+    End Property
+
+    Private _XMDDef As XElement
 
     Public ReadOnly Property TypeSpec() As Dictionary(Of String, String)
         Get
-            Dim myreturn As New Dictionary(Of String, String) From {{"type", XMDDef.@type}}
-            Dim XTypeSpec As XElement = (From xe As XElement In XMDDef.Elements Where xe.Name.LocalName = "TypeSpec").FirstOrDefault
+            Dim myreturn As New Dictionary(Of String, String) From {{"type", _XMDDef.@type}}
+            Dim XTypeSpec As XElement = (From xe As XElement In _XMDDef.Elements Where xe.Name.LocalName = "TypeSpec").FirstOrDefault
             If XTypeSpec IsNot Nothing Then
                 For Each xe As XElement In XTypeSpec.Elements
                     If Not String.IsNullOrEmpty(xe.Value) AndAlso Not myreturn.ContainsKey(xe.Name.LocalName) Then myreturn.Add(xe.Name.LocalName, xe.Value)
@@ -17,7 +23,7 @@
 
     Public ReadOnly Property Value() As String
         Get
-            Return XMD.Value
+            Return _XMD.Value
         End Get
     End Property
     Public ReadOnly Property Label() As String
@@ -27,53 +33,53 @@
     End Property
 
     Public Sub New(ByRef XMDSource As XElement, ByRef XMDDefSource As XElement)
-        XMD = XMDSource
-        XMDDef = XMDDefSource
+        _XMD = XMDSource
+        _XMDDef = XMDDefSource
     End Sub
 
     Public Function GetLabel(LanguageKey As String) As String
         Dim myreturn As String = "?"
-        Dim XLabel As XElement = (From entry In XMDDef.<Label> Where entry.Attribute(MDCFactory.LanguageNamespace + "lang").Value = LanguageKey Select entry).FirstOrDefault
-        If XLabel Is Nothing OrElse String.IsNullOrEmpty(XLabel.Value) AndAlso LanguageKey <> "de" Then XLabel = (From entry In XMDDef.<Label> Where entry.Attribute(MDCFactory.LanguageNamespace + "lang").Value = "de" Select entry).FirstOrDefault
+        Dim XLabel As XElement = (From entry In _XMDDef.<Label> Where entry.Attribute(MDCFactory.LanguageNamespace + "lang").Value = LanguageKey Select entry).FirstOrDefault
+        If XLabel Is Nothing OrElse String.IsNullOrEmpty(XLabel.Value) AndAlso LanguageKey <> "de" Then XLabel = (From entry In _XMDDef.<Label> Where entry.Attribute(MDCFactory.LanguageNamespace + "lang").Value = "de" Select entry).FirstOrDefault
         myreturn = XLabel.Value
         Return myreturn
     End Function
 
     Public Function GetDescription(LanguageKey As String) As String
         Dim myreturn As String = "?"
-        Dim XDescription As XElement = (From entry In XMDDef.<Description> Where entry.Attribute(MDCFactory.LanguageNamespace + "lang").Value = LanguageKey Select entry).FirstOrDefault
-        If XDescription Is Nothing OrElse String.IsNullOrEmpty(XDescription.Value) AndAlso LanguageKey <> "de" Then XDescription = (From entry In XMDDef.<Description> Where entry.Attribute(MDCFactory.LanguageNamespace + "lang").Value = "de" Select entry).FirstOrDefault
+        Dim XDescription As XElement = (From entry In _XMDDef.<Description> Where entry.Attribute(MDCFactory.LanguageNamespace + "lang").Value = LanguageKey Select entry).FirstOrDefault
+        If XDescription Is Nothing OrElse String.IsNullOrEmpty(XDescription.Value) AndAlso LanguageKey <> "de" Then XDescription = (From entry In _XMDDef.<Description> Where entry.Attribute(MDCFactory.LanguageNamespace + "lang").Value = "de" Select entry).FirstOrDefault
         myreturn = XDescription.Value
         Return myreturn
     End Function
 
     Public Function GetValueAsText(ListValueSeparator As String, IncludeDescriptions As Boolean, LanguageKey As String, fallback_to_de As Boolean) As String
         Dim myreturn As String = ""
-        If XMD IsNot Nothing Then
-            myreturn = XMD.Value
-            If XMDDef IsNot Nothing Then
-                Select Case XMDDef.@type.ToLower
+        If _XMD IsNot Nothing Then
+            myreturn = _XMD.Value
+            If _XMDDef IsNot Nothing Then
+                Select Case _XMDDef.@type.ToLower
 
                     'Case "textde", "folderlink", "filelink"
                     '   myreturn = XMD.Value
 
                     Case "textmultilang"
-                        If XMD.HasElements Then
-                            Dim xlang As XElement = (From entry As XElement In XMD.Elements Where entry.Attribute(MDCFactory.LanguageNamespace + "lang").Value = LanguageKey).FirstOrDefault
-                            If (xlang Is Nothing OrElse String.IsNullOrEmpty(xlang)) AndAlso LanguageKey <> "de" AndAlso fallback_to_de Then xlang = (From entry As XElement In XMD.Elements Where entry.Attribute(MDCFactory.LanguageNamespace + "lang").Value = "de").FirstOrDefault
+                        If _XMD.HasElements Then
+                            Dim xlang As XElement = (From entry As XElement In _XMD.Elements Where entry.Attribute(MDCFactory.LanguageNamespace + "lang").Value = LanguageKey).FirstOrDefault
+                            If (xlang Is Nothing OrElse String.IsNullOrEmpty(xlang)) AndAlso LanguageKey <> "de" AndAlso fallback_to_de Then xlang = (From entry As XElement In _XMD.Elements Where entry.Attribute(MDCFactory.LanguageNamespace + "lang").Value = "de").FirstOrDefault
                             If xlang IsNot Nothing Then myreturn = xlang.Value
                         End If
 
                     Case "date"
                         Dim ParseDate As Date
-                        If Date.TryParse(XMD.Value, ParseDate) Then
+                        If Date.TryParse(_XMD.Value, ParseDate) Then
                             myreturn = ParseDate.ToString("dd.MM.yyyy")
                         Else
                             myreturn = "??..."
                         End If
 
                     Case "boolean"
-                        If XMD.Value.ToLower = "true" Then
+                        If _XMD.Value.ToLower = "true" Then
                             If LanguageKey = "de" Then
                                 myreturn = "Ja"
                             Else
@@ -89,10 +95,10 @@
 
                     Case "integer"
                         Dim myInteger As Integer
-                        If Integer.TryParse(XMD.Value, myInteger) Then
+                        If Integer.TryParse(_XMD.Value, myInteger) Then
                             myreturn = myInteger.ToString
 
-                            Dim XTypeSpec As XElement = (From entry As XElement In XMD.<TypeSpec>).FirstOrDefault
+                            Dim XTypeSpec As XElement = (From entry As XElement In _XMD.<TypeSpec>).FirstOrDefault
                             If XTypeSpec IsNot Nothing Then
                                 Dim XSeconds As XElement = (From entry As XElement In XTypeSpec.<Seconds>).FirstOrDefault
                                 If XSeconds IsNot Nothing AndAlso XSeconds.Value.ToUpper = "TRUE" Then
@@ -104,10 +110,10 @@
 
                     Case "decimal"
                         Dim myDecimal As Double
-                        If Double.TryParse(XMD.Value, myDecimal) Then
+                        If Double.TryParse(_XMD.Value, myDecimal) Then
                             Dim digits As Integer = 2
 
-                            Dim XTypeSpec As XElement = (From entry As XElement In XMD.<TypeSpec>).FirstOrDefault
+                            Dim XTypeSpec As XElement = (From entry As XElement In _XMD.<TypeSpec>).FirstOrDefault
                             If XTypeSpec IsNot Nothing Then
                                 Dim XDigits As XElement = (From entry As XElement In XTypeSpec.<Digits>).FirstOrDefault
                                 If XDigits IsNot Nothing AndAlso Integer.TryParse(XDigits.Value, digits) Then
@@ -118,9 +124,9 @@
                         End If
 
                     Case "listsingleselect", "listmultiselect"
-                        Dim XMDValueIds As List(Of String) = (From id As String In XMD.Value.Split({" "}, StringSplitOptions.RemoveEmptyEntries)).ToList
+                        Dim XMDValueIds As List(Of String) = (From id As String In _XMD.Value.Split({" "}, StringSplitOptions.RemoveEmptyEntries)).ToList
                         Dim myreturnList As New List(Of String)
-                        For Each XValue As XElement In XMD.<Value>
+                        For Each XValue As XElement In _XMD.<Value>
                             If XMDValueIds.Contains(XValue.@id) Then
                                 Dim XLabel As XElement = (From entry As XElement In XValue.<Label> Where entry.Attribute(MDCFactory.LanguageNamespace + "lang").Value = LanguageKey).FirstOrDefault
                                 If (XLabel Is Nothing OrElse String.IsNullOrEmpty(XLabel.Value)) AndAlso LanguageKey <> "de" Then XLabel = (From entry As XElement In XValue.<Label> Where entry.Attribute(MDCFactory.LanguageNamespace + "lang").Value = "de").FirstOrDefault
@@ -138,7 +144,7 @@
                         myreturn = String.Join(ListValueSeparator, myreturnList)
 
                     Case Else
-                        myreturn = XMD.Value
+                        myreturn = _XMD.Value
                 End Select
             End If
         End If
@@ -148,9 +154,9 @@
 
     Public Function GetValueAsBoolean() As Boolean
         Dim myreturn As Boolean = False
-        If XMD IsNot Nothing AndAlso XMDDef IsNot Nothing Then
-            If XMDDef.@type.ToLower = "boolean" Then
-                myreturn = XMD.Value.ToLower = "true"
+        If _XMD IsNot Nothing AndAlso _XMDDef IsNot Nothing Then
+            If _XMDDef.@type.ToLower = "boolean" Then
+                myreturn = _XMD.Value.ToLower = "true"
             End If
         End If
 

@@ -13,7 +13,7 @@
         <CollectionViewSource x:Key="CVSMDList">
             <CollectionViewSource.Source>
                 <MultiBinding Converter="{StaticResource MDConverter}" UpdateSourceTrigger="PropertyChanged">
-                    <Binding RelativeSource="{RelativeSource AncestorType={x:Type local:MDListControl}}" Path="MDList"/>
+                    <Binding RelativeSource="{RelativeSource AncestorType={x:Type local:MDListControl}}" Path="XMDList"/>
                     <Binding RelativeSource="{RelativeSource AncestorType={x:Type local:MDListControl}}" Path="MDDefaultList"/>
                     <Binding RelativeSource="{RelativeSource AncestorType={x:Type local:MDListControl}}" Path="IsReadOnly"/>
                 </MultiBinding>

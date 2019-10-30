@@ -41,14 +41,4 @@
             SetValue(MultilineProperty, value)
         End Set
     End Property
-
-    'Public Shared ReadOnly CanChangeProperty As DependencyProperty = DependencyProperty.Register("CanChange", GetType(Boolean), GetType(TextMultiLanguageControl), New FrameworkPropertyMetadata() With {.BindsTwoWayByDefault = False})
-    'Public Property CanChange As Boolean
-    '    Get
-    '        Return GetValue(CanChangeProperty)
-    '    End Get
-    '    Set(ByVal value As Boolean)
-    '        SetValue(CanChangeProperty, value)
-    '    End Set
-    'End Property
 End Class

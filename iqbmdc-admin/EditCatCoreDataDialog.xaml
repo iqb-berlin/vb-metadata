@@ -1,7 +1,7 @@
 ﻿<Window x:Class="EditCatCoreDataDialog"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        xmlns:mdccomp="clr-namespace:iqb.mdc.components;assembly=iqbmdc-components"
+        xmlns:local="clr-namespace:iqb.mdc.admin"
         
         Icon="pack://application:,,,/iqblib-components;component/Resources/iqbGrau.ico"
         ShowInTaskbar="False" 
@@ -25,15 +25,15 @@
             </DockPanel>
             <DockPanel>
                 <TextBlock Width="100" VerticalAlignment="Center">Name</TextBlock>
-                <mdccomp:TextMultiLanguageControl XMD="{Binding}" Languages="de en" TagFilter="Label" Multiline="True"/>
+                <local:TextMultiLanguageControl XMD="{Binding}" Languages="de en" TagFilter="Label" Multiline="True"/>
             </DockPanel>
             <DockPanel>
                 <TextBlock Width="100" VerticalAlignment="Center">Beschreibung</TextBlock>
-                <mdccomp:TextMultiLanguageControl XMD="{Binding}" Languages="de en" TagFilter="Description" Multiline="True"/>
+                <local:TextMultiLanguageControl XMD="{Binding}" Languages="de en" TagFilter="Description" Multiline="True"/>
             </DockPanel>
             <DockPanel>
                 <TextBlock Width="100" VerticalAlignment="Center">Autor/Institution</TextBlock>
-                <mdccomp:TextMultiLanguageControl XMD="{Binding}" Languages="de en" TagFilter="Owner" Multiline="True"/>
+                <local:TextMultiLanguageControl XMD="{Binding}" Languages="de en" TagFilter="Owner" Multiline="True"/>
             </DockPanel>
             <DockPanel>
                 <TextBlock Width="100" VerticalAlignment="Center">Lizenz</TextBlock>

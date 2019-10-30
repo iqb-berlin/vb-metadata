@@ -67,26 +67,29 @@
     </Compile>
     <Compile Include="MDContainerBasisControl.vb" />
     <Compile Include="MDTemplateSelector.vb" />
-    <Compile Include="RWControls\TextMultiLanguageEditControl.xaml.vb">
+    <Compile Include="EditControls\OneCheckBox.xaml.vb">
+      <DependentUpon>OneCheckBox.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="EditControls\TextMultiLanguageEditControl.xaml.vb">
       <DependentUpon>TextMultiLanguageEditControl.xaml</DependentUpon>
     </Compile>
     <Page Include="MDListControl.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="ROControls\FileLinkShowControl.xaml">
+    <Page Include="ShowControls\FileLinkShowControl.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="ROControls\FolderLinkShowControl.xaml">
+    <Page Include="ShowControls\FolderLinkShowControl.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="ROControls\AnyShowControl.xaml">
+    <Page Include="ShowControls\AnyShowControl.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="ROControls\BooleanShowControl.xaml">
+    <Page Include="ShowControls\BooleanShowControl.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
@@ -94,39 +97,36 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="ROControls\TextMultiLanguageShowControl.xaml">
+    <Page Include="ShowControls\TextMultiLanguageShowControl.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="RWControls\TextMultiLanguageControl.xaml">
+    <Page Include="EditControls\OneCheckBox.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Compile Include="ROControls\FileLinkShowControl.xaml.vb">
+    <Compile Include="ShowControls\FileLinkShowControl.xaml.vb">
       <DependentUpon>FileLinkShowControl.xaml</DependentUpon>
     </Compile>
-    <Compile Include="ROControls\FolderLinkShowControl.xaml.vb">
+    <Compile Include="ShowControls\FolderLinkShowControl.xaml.vb">
       <DependentUpon>FolderLinkShowControl.xaml</DependentUpon>
     </Compile>
-    <Compile Include="ROControls\AnyShowControl.xaml.vb">
+    <Compile Include="ShowControls\AnyShowControl.xaml.vb">
       <DependentUpon>AnyShowControl.xaml</DependentUpon>
     </Compile>
-    <Compile Include="ROControls\BooleanShowControl.xaml.vb">
+    <Compile Include="ShowControls\BooleanShowControl.xaml.vb">
       <DependentUpon>BooleanShowControl.xaml</DependentUpon>
     </Compile>
-    <Compile Include="ROControls\Converters.vb" />
+    <Compile Include="ShowControls\Converters.vb" />
     <Compile Include="LinkControl.xaml.vb">
       <DependentUpon>LinkControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="MDBasisControl.vb" />
-    <Compile Include="ROControls\TextMultiLanguageShowControl.xaml.vb">
+    <Compile Include="ShowControls\TextMultiLanguageShowControl.xaml.vb">
       <DependentUpon>TextMultiLanguageShowControl.xaml</DependentUpon>
     </Compile>
-    <Compile Include="RWControls\Converters.vb" />
-    <Compile Include="RWControls\TextMultiLanguageControl.xaml.vb">
-      <DependentUpon>TextMultiLanguageControl.xaml</DependentUpon>
-    </Compile>
-    <Page Include="RWControls\TextMultiLanguageEditControl.xaml">
+    <Compile Include="EditControls\Converters.vb" />
+    <Page Include="EditControls\TextMultiLanguageEditControl.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>

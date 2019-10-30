@@ -1,15 +1,15 @@
 ﻿Imports iqb.mdc.xml
 
-Public MustInherit Class MDListControl
+Public Class MDListControl
     Inherits UserControl
 
-    Public Shared ReadOnly MDListProperty As DependencyProperty = DependencyProperty.Register("MDList", GetType(IEnumerable(Of XElement)), GetType(MDListControl), New FrameworkPropertyMetadata() With {.BindsTwoWayByDefault = False})
-    Public Property MDList As IEnumerable(Of XElement)
+    Public Shared ReadOnly XMDListProperty As DependencyProperty = DependencyProperty.Register("XMDList", GetType(XElement), GetType(MDListControl), New FrameworkPropertyMetadata() With {.BindsTwoWayByDefault = False})
+    Public Property XMDList As XElement
         Get
-            Return GetValue(MDListProperty)
+            Return GetValue(XMDListProperty)
         End Get
-        Set(ByVal value As IEnumerable(Of XElement))
-            SetValue(MDListProperty, value)
+        Set(ByVal value As XElement)
+            SetValue(XMDListProperty, value)
         End Set
     End Property
 

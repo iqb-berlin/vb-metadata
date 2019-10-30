@@ -8,7 +8,22 @@
         Me.DialogResult = True
     End Sub
 
-    Private Sub TBXML_Changed(sender As Object, e As TextChangedEventArgs)
+    Private Sub BtnGo_Clicked(sender As Object, e As RoutedEventArgs)
+        Me.DPX.DataContext = XElement.Parse(Me.TBXML.Text)
+    End Sub
 
+    Private Sub BtnDebugChange_Clicked(sender As Object, e As RoutedEventArgs)
+        Dim XMD As XElement = Me.DPX.DataContext
+        For Each xe As XElement In XMD.Elements
+            If xe.Value = "True" Then
+                xe.Value = "False"
+            Else
+                xe.Value = "True"
+            End If
+        Next
+    End Sub
+    Private Sub BtnDebugView_Clicked(sender As Object, e As RoutedEventArgs)
+        Dim XMD As XElement = Me.DPX.DataContext
+        Me.TBDebug.Text = XMD.ToString
     End Sub
 End Class
