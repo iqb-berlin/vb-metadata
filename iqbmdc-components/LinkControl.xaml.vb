@@ -22,16 +22,6 @@ Public Class LinkControl
         End Set
     End Property
 
-    Private Shared _LastLink As String
-    Public Shared Property LastLink As String
-        Get
-            Return _LastLink
-        End Get
-        Set(ByVal value As String)
-            _LastLink = value
-        End Set
-    End Property
-
     Private Sub HyperlinkClick(sender As Object, e As RoutedEventArgs)
         Dim linkcontrol As Hyperlink = sender
         Dim NavUri As Uri = linkcontrol.NavigateUri

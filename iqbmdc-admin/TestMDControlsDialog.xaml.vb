@@ -1,9 +1,14 @@
 ﻿Public Class TestMDControlsDialog
     'Public XCat As XDocument = Nothing
 
-    'Private Sub Me_Loaded() Handles Me.Loaded
-    'End Sub
+    Private Sub Me_Loaded() Handles Me.Loaded
+        Me.AddHandler(iqb.mdc.components.LinkEditControl.DefaultFolderChangedEvent, New RoutedEventHandler(AddressOf HandleDefaultFolderChanged))
+        TBInfo.Text = iqb.mdc.components.LinkEditControl.DefaultFolder
+    End Sub
 
+    Private Sub HandleDefaultFolderChanged()
+        TBInfo.Text = iqb.mdc.components.LinkEditControl.DefaultFolder
+    End Sub
     Private Sub BtnOK_Clicked(sender As Object, e As RoutedEventArgs) Handles BtnOK.Click
         Me.DialogResult = True
     End Sub

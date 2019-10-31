@@ -1,4 +1,4 @@
-﻿Public Class FileLinkShowControl
+﻿Public Class LinkShowControl
     Inherits MDBasisControl
 
 

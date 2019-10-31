@@ -8,7 +8,7 @@
             <local:LinkLabelConverter x:Key="LinkLabelConverter"/>
         </DockPanel.Resources>
         <TextBlock DockPanel.Dock="Left">
-            <Hyperlink Click="HyperlinkClick" NavigateUri="{Binding Value, Mode=OneWay}">
+            <Hyperlink Click="HyperlinkClick" NavigateUri="{Binding Mode=OneWay}">
                 <Run Text="{Binding Mode=OneWay, Converter={StaticResource LinkLabelConverter}, ConverterParameter=right}" ToolTip="{Binding}"/>
             </Hyperlink>
         </TextBlock>

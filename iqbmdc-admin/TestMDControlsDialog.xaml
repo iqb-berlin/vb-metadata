@@ -23,11 +23,11 @@
             <DockPanel Grid.Column="0" Margin="0 0 5 0">
                 <DockPanel DockPanel.Dock="Top" Margin="0 0 0 5">
                     <Button Click="BtnGo_Clicked" DockPanel.Dock="Right">Go!</Button>
-                    <Button Click="BtnDebugChange_Clicked" DockPanel.Dock="Right">Change!</Button>
                     <Button Click="BtnDebugView_Clicked" DockPanel.Dock="Right">View!</Button>
                     <CheckBox Name="ChBIsReadOnly" VerticalAlignment="Center" DockPanel.Dock="Right"/>
                     <TextBlock>Metadaten-XML eingeben:</TextBlock>
                 </DockPanel>
+                <TextBlock Name="TBInfo" DockPanel.Dock="Top" Margin="0 0 0 5"/>
                 <Grid>
                     <Grid.RowDefinitions>
                         <RowDefinition Height="1*"/>
@@ -39,7 +39,8 @@
                              ScrollViewer.VerticalScrollBarVisibility="Auto" 
                              AcceptsReturn="True"
                              Name="TBXML"/>
-                    <TextBlock Name="TBDebug" TextWrapping="Wrap" Grid.Row="1"/>
+                    <TextBlock Name="TBDebug" TextWrapping="Wrap" Grid.Row="1" ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+                               ScrollViewer.VerticalScrollBarVisibility="Auto"/>
                 </Grid>
             </DockPanel>
             <DockPanel Grid.Column="1" Name="DPX">

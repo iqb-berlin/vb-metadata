@@ -47,6 +47,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System.Core" />
+    <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="System" />
@@ -62,6 +63,9 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Converters.vb" />
+    <Compile Include="EditControls\LinkEditControl.xaml.vb">
+      <DependentUpon>LinkEditControl.xaml</DependentUpon>
+    </Compile>
     <Compile Include="MDListControl.xaml.vb">
       <DependentUpon>MDListControl.xaml</DependentUpon>
     </Compile>
@@ -73,15 +77,15 @@
     <Compile Include="EditControls\TextMultiLanguageEditControl.xaml.vb">
       <DependentUpon>TextMultiLanguageEditControl.xaml</DependentUpon>
     </Compile>
+    <Page Include="EditControls\LinkEditControl.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
     <Page Include="MDListControl.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="ShowControls\FileLinkShowControl.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="ShowControls\FolderLinkShowControl.xaml">
+    <Page Include="ShowControls\LinkShowControl.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
@@ -105,11 +109,8 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Compile Include="ShowControls\FileLinkShowControl.xaml.vb">
-      <DependentUpon>FileLinkShowControl.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="ShowControls\FolderLinkShowControl.xaml.vb">
-      <DependentUpon>FolderLinkShowControl.xaml</DependentUpon>
+    <Compile Include="ShowControls\LinkShowControl.xaml.vb">
+      <DependentUpon>LinkShowControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="ShowControls\AnyShowControl.xaml.vb">
       <DependentUpon>AnyShowControl.xaml</DependentUpon>

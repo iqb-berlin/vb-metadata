@@ -32,18 +32,11 @@ Public Class MDTemplateSelector
                     Case "integer", "decimal", "textde", "date"
                         myControlTypeKey = "doof"
 
-                    Case "filelink"
+                    Case "filelink", "folderlink"
                         If IsReadOnly Then
-                            myControlTypeKey = "FileLinkShowControl"
+                            myControlTypeKey = "LinkShowControl"
                         Else
-                            myControlTypeKey = "FileLinkEditControl"
-                        End If
-
-                    Case "folderlink"
-                        If IsReadOnly Then
-                            myControlTypeKey = "FolderLinkShowControl"
-                        Else
-                            myControlTypeKey = "FolderLinkEditControl"
+                            myControlTypeKey = "LinkEditControl"
                         End If
 
                     Case "boolean"

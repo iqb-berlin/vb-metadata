@@ -59,6 +59,27 @@ Public Class TypeSpecAcceptsReturnConverter
         Throw New NotImplementedException("ConvertBack in TypeSpecAcceptsReturnConverter")
     End Function
 End Class
+Public Class TypeSpecLinkTypeConverter
+    Implements IValueConverter
+
+    Public Function Convert(ByVal value As Object, ByVal targetType As System.Type, ByVal parameter As Object, ByVal culture As Globalization.CultureInfo) As Object Implements System.Windows.Data.IValueConverter.Convert
+        If value IsNot DependencyProperty.UnsetValue AndAlso TypeOf value Is Dictionary(Of String, String) Then
+            Dim valueDict As Dictionary(Of String, String) = value
+            If valueDict.ContainsKey("type") Then
+                If valueDict.Item("type").ToLower = "folderlink" Then
+                    Return "folder"
+                ElseIf valueDict.Item("type").ToLower = "filelink" Then
+                    Return "file"
+                End If
+            End If
+        End If
+        Return "linktype unknown"
+    End Function
+
+    Public Function ConvertBack(ByVal value As Object, ByVal targetType As System.Type, ByVal parameter As Object, ByVal culture As Globalization.CultureInfo) As Object Implements System.Windows.Data.IValueConverter.ConvertBack
+        Throw New NotImplementedException("ConvertBack in TypeSpecLinkTypeConverter")
+    End Function
+End Class
 
 Public Class TextMultiLangMergeConverter
     Implements IValueConverter
