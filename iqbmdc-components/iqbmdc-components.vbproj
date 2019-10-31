@@ -63,9 +63,42 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Converters.vb" />
+    <Compile Include="EditControls\RadioButtonsBasisControl.vb" />
+    <Compile Include="EditControls\CheckBoxesBasisControl.vb" />
+    <Compile Include="EditControls\CheckBoxesFloatControl.xaml.vb">
+      <DependentUpon>CheckBoxesFloatControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="EditControls\CheckBoxesFloatExpanderControl.xaml.vb">
+      <DependentUpon>CheckBoxesFloatExpanderControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="EditControls\CheckBoxesListControl.xaml.vb">
+      <DependentUpon>CheckBoxesListControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="EditControls\ComboBoxControl.xaml.vb">
+      <DependentUpon>ComboBoxControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="EditControls\DateEditControl.xaml.vb">
+      <DependentUpon>DateEditControl.xaml</DependentUpon>
+    </Compile>
     <Compile Include="EditControls\LinkEditControl.xaml.vb">
       <DependentUpon>LinkEditControl.xaml</DependentUpon>
     </Compile>
+    <Compile Include="EditControls\NumericEditDoubleControl.xaml.vb">
+      <DependentUpon>NumericEditDoubleControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="EditControls\NumericEditIntegerControl.xaml.vb">
+      <DependentUpon>NumericEditIntegerControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="EditControls\RadioButtonsControl.xaml.vb">
+      <DependentUpon>RadioButtonsControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="EditControls\RadioButtonsFloatControl.xaml.vb">
+      <DependentUpon>RadioButtonsFloatControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="EditControls\TextEditControl.xaml.vb">
+      <DependentUpon>TextEditControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="EditControls\ValidationRules.vb" />
     <Compile Include="MDListControl.xaml.vb">
       <DependentUpon>MDListControl.xaml</DependentUpon>
     </Compile>
@@ -77,7 +110,47 @@
     <Compile Include="EditControls\TextMultiLanguageEditControl.xaml.vb">
       <DependentUpon>TextMultiLanguageEditControl.xaml</DependentUpon>
     </Compile>
+    <Page Include="EditControls\CheckBoxesFloatControl.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="EditControls\CheckBoxesFloatExpanderControl.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="EditControls\CheckBoxesListControl.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="EditControls\ComboBoxControl.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="EditControls\DateEditControl.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
     <Page Include="EditControls\LinkEditControl.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="EditControls\NumericEditDoubleControl.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="EditControls\NumericEditIntegerControl.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="EditControls\RadioButtonsControl.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="EditControls\RadioButtonsFloatControl.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="EditControls\TextEditControl.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>

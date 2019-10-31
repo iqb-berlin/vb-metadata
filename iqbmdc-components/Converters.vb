@@ -167,3 +167,62 @@ Public Class XLanguageAttributePolygonPointsConverter
         Throw New NotImplementedException("ConvertBack in XLanguageAttributePolygonPointsConverter")
     End Function
 End Class
+
+'####################################################################
+Public Class DateStringDateConverter
+    Implements IValueConverter
+
+    Public Function Convert(ByVal value As Object, ByVal targetType As System.Type, ByVal parameter As Object, ByVal culture As Globalization.CultureInfo) As Object Implements System.Windows.Data.IValueConverter.Convert
+        If String.IsNullOrEmpty(value) Then
+            Return Nothing
+        Else
+            Dim ParseDate As Date
+            If Date.TryParse(value, ParseDate) Then
+                Return ParseDate
+            Else
+                Return Nothing
+            End If
+        End If
+    End Function
+
+    Public Function ConvertBack(ByVal value As Object, ByVal targetType As System.Type, ByVal parameter As Object, ByVal culture As Globalization.CultureInfo) As Object Implements System.Windows.Data.IValueConverter.ConvertBack
+        If TypeOf (value) Is Date Then
+            Return CType(value, Date).ToString("yyyy-MM-dd")
+        Else
+            Return Nothing
+        End If
+    End Function
+End Class
+
+Public Class TimeStringIntegerConverter
+    Implements IValueConverter
+
+    Public Const MatchPattern = "^[0-5]{0, 1}[0-9]: [0-5]{0,1}[0-9]0{0,1}$"
+
+    Public Function Convert(value As Object, targetType As Type, parameter As Object, culture As Globalization.CultureInfo) As Object Implements IValueConverter.Convert
+        Dim myInteger As Integer = 0
+        If value Is Nothing OrElse Not TypeOf (value) Is String OrElse Not Integer.TryParse(value, myInteger) Then
+            Return ""
+        Else
+            Dim ts As TimeSpan = TimeSpan.FromSeconds(myInteger)
+            Return ts.ToString("m\:ss")
+        End If
+    End Function
+
+    Public Function ConvertBack(value As Object, targetType As Type, parameter As Object, culture As Globalization.CultureInfo) As Object Implements IValueConverter.ConvertBack
+        If value Is Nothing OrElse Not TypeOf (value) Is String OrElse String.IsNullOrEmpty(value) OrElse Not Text.RegularExpressions.Regex.IsMatch(CType(value, String).Trim, MatchPattern) Then
+            Return 0
+        Else
+            Dim myMatch As Text.RegularExpressions.Match = Text.RegularExpressions.Regex.Match(CType(value, String).Trim, MatchPattern)
+            Dim minStr As String = myMatch.Value.Substring(0, myMatch.Value.IndexOf(":"))
+            Dim secStr As String = myMatch.Value.Substring(myMatch.Value.IndexOf(":") + 1)
+            If secStr.Length = 1 AndAlso secStr < "6" Then
+                secStr += "0"
+            ElseIf secStr.Length = 3 Then
+                secStr = secStr.Substring(0, 2)
+            End If
+
+            Return Integer.Parse(minStr) * 60 + Integer.Parse(secStr)
+        End If
+    End Function
+End Class

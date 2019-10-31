@@ -1,0 +1,20 @@
+﻿<local:CheckBoxesBasisControl x:Class="CheckBoxesFloatControl"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+              xmlns:local="clr-namespace:iqb.mdc.components">
+    <WrapPanel Name="WPCheckBoxes">
+        <WrapPanel.Resources>
+            <Style TargetType="{x:Type CheckBox}">
+                <Setter Property="Margin" Value="0 0 5 2"/>
+                <Setter Property="Padding" Value="3 0 0 0"/>
+            </Style>
+            <Style TargetType="{x:Type TextBlock}">
+                <Setter Property="TextWrapping" Value="NoWrap"/>
+                <Setter Property="TextTrimming" Value="CharacterEllipsis"/>
+                <Setter Property="ToolTip" Value="{Binding RelativeSource={RelativeSource Self}, Path=Text}"/>
+            </Style>
+        </WrapPanel.Resources>
+    </WrapPanel>
+</local:CheckBoxesBasisControl>

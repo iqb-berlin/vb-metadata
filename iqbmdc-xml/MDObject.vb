@@ -71,11 +71,15 @@
                         End If
 
                     Case "date"
-                        Dim ParseDate As Date
-                        If Date.TryParse(_XMD.Value, ParseDate) Then
-                            myreturn = ParseDate.ToString("dd.MM.yyyy")
+                        If String.IsNullOrEmpty(_XMD.Value) Then
+                            myreturn = "-"
                         Else
-                            myreturn = "??..."
+                            Dim ParseDate As Date
+                            If Date.TryParse(_XMD.Value, ParseDate) Then
+                                myreturn = ParseDate.ToString("dd.MM.yyyy")
+                            Else
+                                myreturn = "ungültiges Datum"
+                            End If
                         End If
 
                     Case "boolean"
@@ -94,39 +98,49 @@
                         End If
 
                     Case "integer"
-                        Dim myInteger As Integer
-                        If Integer.TryParse(_XMD.Value, myInteger) Then
-                            myreturn = myInteger.ToString
+                        If String.IsNullOrEmpty(_XMD.Value) Then
+                            myreturn = "0"
+                        Else
+                            Dim myInteger As Integer
+                            If Integer.TryParse(_XMD.Value, myInteger) Then
+                                myreturn = myInteger.ToString
 
-                            Dim XTypeSpec As XElement = (From entry As XElement In _XMD.<TypeSpec>).FirstOrDefault
-                            If XTypeSpec IsNot Nothing Then
-                                Dim XSeconds As XElement = (From entry As XElement In XTypeSpec.<Seconds>).FirstOrDefault
-                                If XSeconds IsNot Nothing AndAlso XSeconds.Value.ToUpper = "TRUE" Then
-                                    Dim ts As TimeSpan = TimeSpan.FromSeconds(myInteger)
-                                    myreturn = ts.ToString("m\:ss")
+                                Dim XTypeSpec As XElement = (From entry As XElement In _XMD.<TypeSpec>).FirstOrDefault
+                                If XTypeSpec IsNot Nothing Then
+                                    Dim XSeconds As XElement = (From entry As XElement In XTypeSpec.<Seconds>).FirstOrDefault
+                                    If XSeconds IsNot Nothing AndAlso XSeconds.Value.ToUpper = "TRUE" Then
+                                        Dim ts As TimeSpan = TimeSpan.FromSeconds(myInteger)
+                                        myreturn = ts.ToString("m\:ss")
+                                    End If
                                 End If
                             End If
                         End If
 
                     Case "decimal"
-                        Dim myDecimal As Double
-                        If Double.TryParse(_XMD.Value, myDecimal) Then
-                            Dim digits As Integer = 2
+                        If String.IsNullOrEmpty(_XMD.Value) Then
+                            myreturn = "0"
+                        Else
+                            Dim myDecimal As Double
+                            If Double.TryParse(_XMD.Value.Replace(".", ","), myDecimal) Then
+                                Dim digits As Integer = 2
 
-                            Dim XTypeSpec As XElement = (From entry As XElement In _XMD.<TypeSpec>).FirstOrDefault
-                            If XTypeSpec IsNot Nothing Then
-                                Dim XDigits As XElement = (From entry As XElement In XTypeSpec.<Digits>).FirstOrDefault
-                                If XDigits IsNot Nothing AndAlso Integer.TryParse(XDigits.Value, digits) Then
-                                    If digits < 0 OrElse digits > 9 Then digits = 2
+                                Dim XTypeSpec As XElement = (From entry As XElement In _XMDDef.<TypeSpec>).FirstOrDefault
+                                If XTypeSpec IsNot Nothing Then
+                                    Dim XDigits As XElement = (From entry As XElement In XTypeSpec.<Digits>).FirstOrDefault
+                                    If XDigits IsNot Nothing AndAlso Integer.TryParse(XDigits.Value, digits) Then
+                                        If digits < 0 OrElse digits > 9 Then digits = 2
+                                    End If
                                 End If
+                                myreturn = myDecimal.ToString("F" + digits.ToString) ', Globalization.CultureInfo.InvariantCulture)
+                            Else
+                                myreturn = "?" + _XMD.Value
                             End If
-                            myreturn = myDecimal.ToString("F" + digits.ToString, Globalization.CultureInfo.InvariantCulture)
                         End If
 
                     Case "listsingleselect", "listmultiselect"
                         Dim XMDValueIds As List(Of String) = (From id As String In _XMD.Value.Split({" "}, StringSplitOptions.RemoveEmptyEntries)).ToList
                         Dim myreturnList As New List(Of String)
-                        For Each XValue As XElement In _XMD.<Value>
+                        For Each XValue As XElement In _XMDDef.<Value>
                             If XMDValueIds.Contains(XValue.@id) Then
                                 Dim XLabel As XElement = (From entry As XElement In XValue.<Label> Where entry.Attribute(MDCFactory.LanguageNamespace + "lang").Value = LanguageKey).FirstOrDefault
                                 If (XLabel Is Nothing OrElse String.IsNullOrEmpty(XLabel.Value)) AndAlso LanguageKey <> "de" Then XLabel = (From entry As XElement In XValue.<Label> Where entry.Attribute(MDCFactory.LanguageNamespace + "lang").Value = "de").FirstOrDefault
@@ -159,6 +173,17 @@
                 myreturn = _XMD.Value.ToLower = "true"
             End If
         End If
+
+        Return myreturn
+    End Function
+
+    Public Function GetListValues(LanguageKey As String) As Dictionary(Of String, String)
+        Dim myreturn As New Dictionary(Of String, String)
+        For Each xListValue As XElement In _XMDDef.<Value>
+            Dim XLabel As XElement = (From entry In xListValue.<Label> Where entry.Attribute(MDCFactory.LanguageNamespace + "lang").Value = LanguageKey Select entry).FirstOrDefault
+            If XLabel Is Nothing OrElse String.IsNullOrEmpty(XLabel.Value) AndAlso LanguageKey <> "de" Then XLabel = (From entry In xListValue.<Label> Where entry.Attribute(MDCFactory.LanguageNamespace + "lang").Value = "de" Select entry).FirstOrDefault
+            If Not myreturn.ContainsKey(xListValue.@id) Then myreturn.Add(xListValue.@id, XLabel.Value)
+        Next
 
         Return myreturn
     End Function

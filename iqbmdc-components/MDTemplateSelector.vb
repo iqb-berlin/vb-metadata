@@ -29,8 +29,14 @@ Public Class MDTemplateSelector
                             myControlTypeKey = "TextMultiLanguageEditControl"
                         End If
 
-                    Case "integer", "decimal", "textde", "date"
-                        myControlTypeKey = "doof"
+                    Case "integer"
+                        If Not IsReadOnly Then myControlTypeKey = "NumericEditIntegerControl"
+
+                    Case "decimal"
+                        If Not IsReadOnly Then myControlTypeKey = "NumericEditDoubleControl"
+
+                    Case "textde"
+                        If Not IsReadOnly Then myControlTypeKey = "TextEditControl"
 
                     Case "filelink", "folderlink"
                         If IsReadOnly Then
@@ -39,13 +45,41 @@ Public Class MDTemplateSelector
                             myControlTypeKey = "LinkEditControl"
                         End If
 
+                    Case "date"
+                        If Not IsReadOnly Then myControlTypeKey = "DateEditControl"
+
                     Case "boolean"
                         If IsReadOnly Then
                             myControlTypeKey = "BooleanShowControl"
                         Else
                             myControlTypeKey = "OneCheckBox"
                         End If
-                        '"listsingleselect", "listmultiselect"
+
+                    Case "listsingleselect"
+                        If Not IsReadOnly Then
+                            myControlTypeKey = "RadioButtonsControl"
+                            If myTypeDef.ContainsKey("ListControl") Then
+                                Select Case myTypeDef.Item("ListControl")
+                                    Case "combobox"
+                                        myControlTypeKey = "ComboBoxControl"
+                                    Case "float"
+                                        myControlTypeKey = "RadioButtonsFloatControl"
+                                End Select
+                            End If
+                        End If
+
+                    Case "listmultiselect"
+                        If Not IsReadOnly Then
+                            myControlTypeKey = "CheckBoxesListControl"
+                            If myTypeDef.ContainsKey("ListControl") Then
+                                Select Case myTypeDef.Item("ListControl")
+                                    Case "expandable"
+                                        myControlTypeKey = "CheckBoxesFloatExpanderControl"
+                                    Case "float"
+                                        myControlTypeKey = "CheckBoxesFloatControl"
+                                End Select
+                            End If
+                        End If
                 End Select
             End If
         End If

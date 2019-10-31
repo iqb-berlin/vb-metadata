@@ -22,6 +22,7 @@
         <DockPanel DockPanel.Dock="Top" LastChildFill="False">
             <comp:ButtonOpen Margin="2" ToolTip="MD-Katalog öffnen (XML-Datei)"/>
             <comp:ButtonSave Margin="2" ToolTip="Speichern"/>
+            <comp:ButtonReload Margin="2" ToolTip="Katalog-Puffer löschen"/>
             <comp:ButtonHelp DockPanel.Dock="Right" Margin="2"/>
             <Menu DockPanel.Dock="Right" Background="Transparent">
                 <MenuItem>

@@ -3,5 +3,12 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:local="clr-namespace:iqb.mdc.components">
-    <TextBlock Text="{Binding Path=Value}" TextWrapping="Wrap" Margin="0 2 0 0" />
+    <TextBlock TextWrapping="Wrap" Margin="0 2 0 0" >
+        <TextBlock.Resources>
+            <local:MDValueToStringConverter x:Key="MDValueToStringConverter"/>
+        </TextBlock.Resources>
+        <TextBlock.Text>
+            <Binding Converter="{StaticResource MDValueToStringConverter}"/>
+        </TextBlock.Text>
+    </TextBlock>
 </local:MDBasisControl>

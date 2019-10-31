@@ -25,6 +25,10 @@ Public Class MDCFactory
 
     Private Shared MDCatList As New Dictionary(Of String, MDCat)
 
+    Public Shared Sub ResetCatalogList()
+        MDCatList.Clear()
+    End Sub
+
     Private Shared Function GetMDC(catId As String) As MDCat
         Dim myreturn As MDCat = Nothing
         If MDCatList.ContainsKey(catId) Then

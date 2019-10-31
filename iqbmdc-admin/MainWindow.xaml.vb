@@ -79,6 +79,7 @@ Class MainWindow
         CommandBindings.Add(New CommandBinding(ApplicationCommands.Save, AddressOf HandleSaveExecuted, AddressOf HandleSaveCanExecute))
         CommandBindings.Add(New CommandBinding(AppCommands.EditCatMetadata, AddressOf HandleEditCatMetadataExecuted, AddressOf HandleCatLoadedCanExecute))
         CommandBindings.Add(New CommandBinding(AppCommands.SaveAs, AddressOf HandleSaveAsExecuted, AddressOf HandleCatLoadedCanExecute))
+        CommandBindings.Add(New CommandBinding(IQBCommands.ReloadObject, AddressOf HandleReloadExecuted))
         CommandBindings.Add(New CommandBinding(AppCommands.OpenWebCat, AddressOf HandleOpenWebCatExecuted))
         CommandBindings.Add(New CommandBinding(AppCommands.TestMDControls, AddressOf HandleTestMDControlsExecuted))
         If iqb.lib.windows.ADFactory.GetMyName() = "mechtelm" Then CommandBindings.Add(New CommandBinding(AppCommands.SaveTheWorld, AddressOf HandleSaveTheWorldExecuted))
@@ -148,7 +149,9 @@ Class MainWindow
             ApplicationCommands.Save.Execute(Nothing, Nothing)
         End If
     End Sub
-
+    Private Sub HandleReloadExecuted(ByVal sender As Object, ByVal e As ExecutedRoutedEventArgs)
+        iqb.mdc.xml.MDCFactory.ResetCatalogList()
+    End Sub
     Private Sub HandleOpenExecuted(ByVal sender As Object, ByVal e As ExecutedRoutedEventArgs)
         Dim filepicker As New Microsoft.Win32.OpenFileDialog With {.FileName = My.Settings.lastfile_mdcat, .Filter = "XML-Dateien|*.xml",
                                                                            .DefaultExt = "Xml", .Title = "MD-Katalog öffnen"}
