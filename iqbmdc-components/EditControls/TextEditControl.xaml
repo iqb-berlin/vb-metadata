@@ -8,7 +8,7 @@
         <local:TypeSpecTextWrappingConverter x:Key="TypeSpecTextWrappingConverter"/>
         <local:TypeSpecAcceptsReturnConverter x:Key="TypeSpecAcceptsReturnConverter"/>
     </local:MDBasisControl.Resources>
-    <TextBox Text="{Binding XMD.Value}"
+    <TextBox Text="{Binding XMD.Value, UpdateSourceTrigger=PropertyChanged}"
         TextWrapping="{Binding TypeSpec, Converter={StaticResource TypeSpecTextWrappingConverter}}" 
         AcceptsReturn="{Binding TypeSpec, Converter={StaticResource TypeSpecAcceptsReturnConverter}}"/>
 

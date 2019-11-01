@@ -10,7 +10,7 @@
             <local:TextMultiLangMergeConverter x:Key="TextMultiLangMergeConverter"/>
             <local:TypeSpecTextWrappingConverter x:Key="TypeSpecTextWrappingConverter"/>
             <local:TypeSpecAcceptsReturnConverter x:Key="TypeSpecAcceptsReturnConverter"/>
-            <CollectionViewSource x:Key="CVSMDList" Source="{Binding Converter={StaticResource TextMultiLangMergeConverter}, UpdateSourceTrigger=PropertyChanged, Mode=OneWay}"/>
+            <CollectionViewSource x:Key="CVSMDList" Source="{Binding Converter={StaticResource TextMultiLangMergeConverter}, Mode=OneWay}"/>
         </StackPanel.Resources>
         <ItemsControl ItemsSource="{Binding Source={StaticResource CVSMDList}}" Focusable="False">
             <ItemsControl.ItemTemplate>
@@ -30,7 +30,7 @@
                             </TextBlock>
                         </Grid>
 
-                        <TextBox Text="{Binding Value}" 
+                        <TextBox Text="{Binding Value, UpdateSourceTrigger=PropertyChanged}" 
                                  TextWrapping="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type local:TextMultiLanguageEditControl}}, Path=DataContext.TypeSpec, Converter={StaticResource TypeSpecTextWrappingConverter}}"
                                  AcceptsReturn="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type local:TextMultiLanguageEditControl}}, Path=DataContext.TypeSpec, Converter={StaticResource TypeSpecAcceptsReturnConverter}}"/>
                     </DockPanel>

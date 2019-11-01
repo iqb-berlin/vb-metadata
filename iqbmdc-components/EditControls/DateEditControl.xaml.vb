@@ -11,8 +11,10 @@
     End Sub
 
     Private Sub Me_Unloaded(ByVal sender As Object, ByVal e As RoutedEventArgs) Handles Me.Unloaded
-        Dim myMDObject As iqb.mdc.xml.MDObject = Me.DataContext
-        RemoveHandler myMDObject.XMD.Changed, AddressOf NotifyXMDChanged
+        If TypeOf Me.DataContext Is iqb.mdc.xml.MDObject Then
+            Dim myMDObject As iqb.mdc.xml.MDObject = Me.DataContext
+            RemoveHandler myMDObject.XMD.Changed, AddressOf NotifyXMDChanged
+        End If
     End Sub
 
 End Class

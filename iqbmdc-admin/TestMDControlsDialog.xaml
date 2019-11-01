@@ -32,6 +32,7 @@
                     <Grid.RowDefinitions>
                         <RowDefinition Height="1*"/>
                         <RowDefinition Height="1*"/>
+                        <RowDefinition Height="1*"/>
                     </Grid.RowDefinitions>
                     <TextBox Grid.Row="0"
                              TextWrapping="Wrap" 
@@ -39,12 +40,18 @@
                              ScrollViewer.VerticalScrollBarVisibility="Auto" 
                              AcceptsReturn="True"
                              Name="TBXML"/>
-                    <TextBlock Name="TBDebug" TextWrapping="Wrap" Grid.Row="1" ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+                    <TextBox Grid.Row="1"
+                             TextWrapping="Wrap" 
+                             ScrollViewer.HorizontalScrollBarVisibility="Disabled" 
+                             ScrollViewer.VerticalScrollBarVisibility="Auto" 
+                             AcceptsReturn="True"
+                             Name="TBStdXML"/>
+                    <TextBlock Name="TBDebug" TextWrapping="Wrap" Grid.Row="2" ScrollViewer.HorizontalScrollBarVisibility="Disabled"
                                ScrollViewer.VerticalScrollBarVisibility="Auto"/>
                 </Grid>
             </DockPanel>
             <DockPanel Grid.Column="1" Name="DPX">
-                <mdcomp:MDListControl Name="MDLC" XMDList="{Binding}" IsReadOnly="{Binding ElementName=ChBIsReadOnly, Path=IsChecked}" />
+                <mdcomp:MDListControl Name="MDLC" IsReadOnly="{Binding ElementName=ChBIsReadOnly, Path=IsChecked}" />
             </DockPanel>
             <GridSplitter Width="5" Grid.Column="0"/>
         </Grid>

@@ -15,7 +15,14 @@
     End Sub
 
     Private Sub BtnGo_Clicked(sender As Object, e As RoutedEventArgs)
-        Me.DPX.DataContext = XElement.Parse(Me.TBXML.Text)
+        Me.MDLC.XMDList = XElement.Parse(Me.TBXML.Text)
+
+        Try
+            Dim xe As XElement = XElement.Parse(Me.TBStdXML.Text)
+            Me.MDLC.MDDefaultList = xe.Elements.ToList
+        Catch ex As Exception
+            Debug.Print(ex.Message)
+        End Try
     End Sub
 
     Private Sub BtnDebugChange_Clicked(sender As Object, e As RoutedEventArgs)
