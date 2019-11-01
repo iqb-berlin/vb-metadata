@@ -7,7 +7,6 @@ Public Class MDConverter
         If values.Count > 1 AndAlso TypeOf values(0) Is XElement Then
             For Each XMD As XElement In CType(values(0), XElement).Elements
                 Dim mdo As MDObject = MDCFactory.GetMDObject(XMD)
-                AddHandler mdo.XMD.Changed, AddressOf NotifyXMDChanged
                 myreturn.Add(mdo)
             Next
         End If
@@ -17,10 +16,6 @@ Public Class MDConverter
     Public Function ConvertBack(value As Object, targetTypes() As Type, parameter As Object, culture As Globalization.CultureInfo) As Object() Implements IMultiValueConverter.ConvertBack
         Throw New NotImplementedException("MDConverter ConvertBack")
     End Function
-
-    Private Sub NotifyXMDChanged(sender As Object, e As System.Xml.Linq.XObjectChangeEventArgs)
-        Debug.Print(e.ObjectChange.ToString)
-    End Sub
 
 End Class
 

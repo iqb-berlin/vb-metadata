@@ -2,6 +2,8 @@
 
 Public Class MDListControl
     Inherits UserControl
+    Public Shared ReadOnly MDChangedEvent As RoutedEvent =
+        EventManager.RegisterRoutedEvent("MDChanged", RoutingStrategy.Bubble, GetType(RoutedEventHandler), GetType(MDListControl))
 
     Public Shared ReadOnly XMDListProperty As DependencyProperty = DependencyProperty.Register("XMDList", GetType(XElement), GetType(MDListControl), New FrameworkPropertyMetadata() With {.BindsTwoWayByDefault = False})
     Public Property XMDList As XElement

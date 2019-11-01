@@ -67,6 +67,7 @@ Public Class PanelCheckBoxConverter
                 Dim CheckBoxName As String = PropValueKey.Name.Substring(PropValueKey.Name.IndexOf(CheckBoxesBasisControl.CheckboxNameSeparator) + CheckBoxesBasisControl.CheckboxNameSeparator.Length)
 
                 myCBC.CheckBoxData.Item(CheckBoxName) = CType(value, Boolean)
+                myCBC.RaiseEvent(New RoutedEventArgs(MDListControl.MDChangedEvent))
                 Return String.Join(" ", From kv As KeyValuePair(Of String, Boolean) In myCBC.CheckBoxData Where kv.Value = True Select kv.Key)
             End If
         End If
@@ -94,6 +95,7 @@ Public Class PanelRadioButtonConverter
             Dim myRB As RadioButton = parameter
             Dim myRadiobuttonName As String = myRB.Name.Substring(myRB.Name.IndexOf(RadioButtonsBasisControl.RadiobuttonNameSeparator) + RadioButtonsBasisControl.RadiobuttonNameSeparator.Length)
             If CType(value, Boolean) = True Then
+                myRB.RaiseEvent(New RoutedEventArgs(MDListControl.MDChangedEvent))
                 Return myRadiobuttonName
             Else
                 Dim element As FrameworkElement = myRB
@@ -104,7 +106,10 @@ Public Class PanelRadioButtonConverter
                     Dim myPanel As Panel = element
                     For Each RB As RadioButton In From fe As FrameworkElement In myPanel.Children Where TypeOf (fe) Is RadioButton
                         Dim RadiobuttonName As String = RB.Name.Substring(RB.Name.IndexOf(RadioButtonsBasisControl.RadiobuttonNameSeparator) + RadioButtonsBasisControl.RadiobuttonNameSeparator.Length)
-                        If RadiobuttonName <> myRadiobuttonName AndAlso RB.IsChecked Then Return RadiobuttonName
+                        If RadiobuttonName <> myRadiobuttonName AndAlso RB.IsChecked Then
+                            myRB.RaiseEvent(New RoutedEventArgs(MDListControl.MDChangedEvent))
+                            Return RadiobuttonName
+                        End If
                     Next
                 End If
             End If

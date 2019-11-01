@@ -2,7 +2,21 @@
     Inherits MDBasisControl
 
     Public Shared DefaultFolder As String = ""
-    Public Shared ReadOnly DefaultFolderChangedEvent As RoutedEvent = EventManager.RegisterRoutedEvent("DefaultFolderChanged", RoutingStrategy.Bubble, GetType(RoutedEventHandler), GetType(LinkEditControl))
+    Public Shared ReadOnly DefaultFolderChangedEvent As RoutedEvent =
+        EventManager.RegisterRoutedEvent("DefaultFolderChanged", RoutingStrategy.Bubble, GetType(RoutedEventHandler), GetType(LinkEditControl))
+    'Public Custom Event DefaultFolderChanged As RoutedEventHandler
+    '    AddHandler(value As RoutedEventHandler)
+    '        Me.AddHandler(DefaultFolderChangedEvent, value)
+    '    End AddHandler
+
+    '    RemoveHandler(value As RoutedEventHandler)
+    '        Me.RemoveHandler(DefaultFolderChangedEvent, value)
+    '    End RemoveHandler
+
+    '    RaiseEvent(sender As Object, e As RoutedEventArgs)
+    '        Me.RaiseEvent(e)
+    '    End RaiseEvent
+    'End Event
 
     Private Sub HandleEditObjectExecuted(sender As Object, e As ExecutedRoutedEventArgs)
         Dim fe As FrameworkElement = sender
@@ -39,6 +53,7 @@
                 myMDObject.XMD.Value = linkValue
                 If DefaultFolder <> myFolder Then
                     DefaultFolder = myFolder
+                    Me.RaiseEvent(New RoutedEventArgs(MDListControl.MDChangedEvent))
                     Me.RaiseEvent(New RoutedEventArgs(DefaultFolderChangedEvent))
                 End If
             End If

@@ -4,6 +4,7 @@
     Private Sub Me_Loaded() Handles Me.Loaded
         Me.AddHandler(iqb.mdc.components.LinkEditControl.DefaultFolderChangedEvent, New RoutedEventHandler(AddressOf HandleDefaultFolderChanged))
         TBInfo.Text = iqb.mdc.components.LinkEditControl.DefaultFolder
+        Me.AddHandler(iqb.mdc.components.MDListControl.MDChangedEvent, New RoutedEventHandler(AddressOf MDChangedEventHandler))
     End Sub
 
     Private Sub HandleDefaultFolderChanged()
@@ -31,4 +32,9 @@
         Dim XMD As XElement = Me.DPX.DataContext
         Me.TBDebug.Text = XMD.ToString
     End Sub
+
+    Private Sub MDChangedEventHandler(sender As Object, e As RoutedEventArgs)
+        Debug.Print("MDChangedEvent fired")
+    End Sub
+
 End Class
