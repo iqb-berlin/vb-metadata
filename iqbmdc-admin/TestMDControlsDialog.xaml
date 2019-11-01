@@ -50,8 +50,8 @@
                                ScrollViewer.VerticalScrollBarVisibility="Auto"/>
                 </Grid>
             </DockPanel>
-            <DockPanel Grid.Column="1" Name="DPX">
-                <mdcomp:MDListControl Name="MDLC" IsReadOnly="{Binding ElementName=ChBIsReadOnly, Path=IsChecked}" />
+            <DockPanel Grid.Column="1">
+                <mdcomp:MDContainerControl Name="MDLC" IsReadOnly="{Binding ElementName=ChBIsReadOnly, Path=IsChecked}" />
             </DockPanel>
             <GridSplitter Width="5" Grid.Column="0"/>
         </Grid>

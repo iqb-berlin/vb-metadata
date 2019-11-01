@@ -34,4 +34,12 @@ Public Class MDListControl
             SetValue(IsReadOnlyProperty, value)
         End Set
     End Property
+
+    Public Sub Update()
+        Dim myCVS As CollectionViewSource = Me.FindResource("CVSMDList")
+        If myCVS IsNot Nothing Then
+            Dim be As System.Windows.Data.MultiBindingExpression = BindingOperations.GetMultiBindingExpression(myCVS, CollectionViewSource.SourceProperty)
+            If be IsNot Nothing Then be.UpdateTarget()
+        End If
+    End Sub
 End Class

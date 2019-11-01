@@ -97,22 +97,20 @@ Public Class MDCFactory
         Return myreturn
     End Function
 
-    'Public Shared Function GetMDValueAsText(XMD As XElement, ListValueSeparator As String, IncludeDescriptions As Boolean, LanguageKey As String, fallback_to_de As Boolean) As String
-    '    Dim myreturn As String = "?."
-    '    Dim MDObj As MDObject = MDCFactory.GetMDObject(XMD)
-    '    If MDObj IsNot Nothing Then myreturn = MDObj.GetMDValueAsText(ListValueSeparator, IncludeDescriptions, LanguageKey, fallback_to_de)
+    Public Shared Function GetMDCatLabel(catId As String, Optional LanguageKey As String = "de") As String
+        Dim myreturn As String = "??"
+        Dim myCat As MDCat = GetMDC(catId)
+        If myCat IsNot Nothing Then myreturn = myCat.GetLabel()
+        Return myreturn
+    End Function
 
-    '    Return myreturn
-    'End Function
+    Public Shared Function GetMDLabel(catId As String, defId As String, Optional LanguageKey As String = "de") As String
+        Dim myreturn As String = "??"
+        Dim myCat As MDCat = GetMDC(catId)
+        If myCat IsNot Nothing Then myreturn = myCat.GetMDDefLabel(defId, LanguageKey)
 
-    'Public Shared Function GetMDValueAsBoolean(XMD As XElement) As Boolean
-    '    Dim myreturn As Boolean = False
-    '    Dim catId As String = XMD.@cat
-    '    Dim myCat As MDCat = MDCFactory.GetMDC(catId)
-    '    If myCat IsNot Nothing Then myreturn = myCat.GetMDValueAsBoolean(XMD)
-
-    '    Return myreturn
-    'End Function
+        Return myreturn
+    End Function
 
     Public Shared Function GetMDObject(ByRef XMD As XElement) As MDObject
         Dim myreturn As MDObject = Nothing
@@ -122,4 +120,27 @@ Public Class MDCFactory
 
         Return myreturn
     End Function
+
+    Public Shared Function GetMDList(CatIdList As List(Of String)) As List(Of MDInfo)
+        Dim myreturn As New List(Of MDInfo)
+        For Each catId As String In CatIdList
+            Dim myCat As MDCat = GetMDC(catId)
+            If myCat IsNot Nothing Then
+                For Each mdi As MDInfo In myCat.GetMDList()
+                    mdi.CatId = catId
+                    myreturn.Add(mdi)
+                Next
+            End If
+        Next
+
+        Return myreturn
+    End Function
+End Class
+
+Public Class MDInfo
+    Public Label As String
+    Public Description As String
+    Public CatId As String
+    Public CatLabel As String
+    Public id As String
 End Class
