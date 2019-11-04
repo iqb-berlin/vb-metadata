@@ -67,6 +67,9 @@
       <DependentUpon>MDContainerControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="Converters.vb" />
+    <Compile Include="Dialogs\EditDefaultMDListDialog.xaml.vb">
+      <DependentUpon>EditDefaultMDListDialog.xaml</DependentUpon>
+    </Compile>
     <Compile Include="EditControls\RadioButtonsBasisControl.vb" />
     <Compile Include="EditControls\CheckBoxesBasisControl.vb" />
     <Compile Include="EditControls\CheckBoxesFloatControl.xaml.vb">
@@ -114,6 +117,10 @@
       <DependentUpon>TextMultiLanguageEditControl.xaml</DependentUpon>
     </Compile>
     <Page Include="Container\MDContainerControl.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Dialogs\EditDefaultMDListDialog.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
@@ -269,5 +276,6 @@
       <Name>iqbmd-xml</Name>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.VisualBasic.targets" />
 </Project>

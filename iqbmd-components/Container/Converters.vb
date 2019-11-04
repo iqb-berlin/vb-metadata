@@ -10,8 +10,8 @@ Public Class MDConverter
                 (From xe As XElement In XMDList.Elements).ToDictionary(Function(xe) xe.@cat + "##" + xe.@def, Function(xe) xe)
 
             Dim StandardXMD2Add As New Dictionary(Of String, XElement)
-            If values(1) IsNot Nothing AndAlso TypeOf values(1) Is List(Of XElement) Then
-                StandardXMD2Add = (From xe As XElement In CType(values(1), List(Of XElement))).ToDictionary(Function(xe) xe.@cat + "##" + xe.@def, Function(xe) xe)
+            If values(1) IsNot Nothing AndAlso TypeOf values(1) Is XElement Then
+                StandardXMD2Add = (From xe As XElement In CType(values(1), XElement).Elements).ToDictionary(Function(xe) xe.@cat + "##" + xe.@def, Function(xe) xe)
             End If
             For Each XMD As KeyValuePair(Of String, XElement) In StandardXMD2Add
                 If XMD2Add.ContainsKey(XMD.Key) Then

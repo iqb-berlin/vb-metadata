@@ -66,6 +66,8 @@
   <ItemGroup>
     <Compile Include="MDCat.vb" />
     <Compile Include="MDCFactory.vb" />
+    <Compile Include="MDFilter.vb" />
+    <Compile Include="MDInfo.vb" />
     <Compile Include="MDObject.vb" />
     <Compile Include="My Project\AssemblyInfo.vb" />
     <Compile Include="My Project\Application.Designer.vb">

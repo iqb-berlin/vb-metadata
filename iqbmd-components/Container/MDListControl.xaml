@@ -14,7 +14,7 @@
             <CollectionViewSource.Source>
                 <MultiBinding Converter="{StaticResource MDConverter}">
                     <Binding RelativeSource="{RelativeSource AncestorType={x:Type local:MDListControl}}" Path="XMDList"/>
-                    <Binding RelativeSource="{RelativeSource AncestorType={x:Type local:MDListControl}}" Path="MDDefaultList"/>
+                    <Binding RelativeSource="{RelativeSource AncestorType={x:Type local:MDListControl}}" Path="XDefaultMDList"/>
                     <Binding RelativeSource="{RelativeSource AncestorType={x:Type local:MDListControl}}" Path="IsReadOnly"/>
                 </MultiBinding>
             </CollectionViewSource.Source>

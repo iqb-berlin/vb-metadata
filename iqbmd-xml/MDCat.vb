@@ -67,14 +67,41 @@
             If XLabel Is Nothing OrElse String.IsNullOrEmpty(XLabel.Value) AndAlso LanguageKey <> "de" Then XLabel = (From entry In XMDCat.Root.<Label> Where entry.Attribute(MDCFactory.LanguageNamespace + "lang").Value = "de" Select entry).FirstOrDefault
             Dim CatLabel As String = XLabel.Value
             Dim CatId As String = XMDCat.Root.@id
-
             For Each md As KeyValuePair(Of String, XElement) In MDDefs
+                Dim myMDType As String = "unbekannter Typ"
+                Try
+                    myMDType = MDCFactory.MDDefTypes.Item(md.Value.@type)
+                Catch ex As Exception
+                    myMDType = "unbekannter Typ '" + md.Value.@type + "'"
+                End Try
                 myreturn.Add(New MDInfo With {
-                             .CatId = CatId, .CatLabel = CatLabel, .id = md.Key,
+                             .CatId = CatId, .CatLabel = CatLabel, .id = md.Key, .typeLabel = myMDType,
                              .Label = GetMDDefLabel(md.Key, LanguageKey), .Description = GetMDDefDescription(md.Key, LanguageKey)})
             Next
         End If
 
+        Return myreturn
+    End Function
+
+    Public Function GetMDInfo(id As String, Optional LanguageKey As String = "de") As MDInfo
+        Dim myreturn As MDInfo = Nothing
+        If XMDCat IsNot Nothing AndAlso MDDefs.ContainsKey(id) Then
+            Dim XLabel As XElement = (From entry In XMDCat.Root.<Label> Where entry.Attribute(MDCFactory.LanguageNamespace + "lang").Value = LanguageKey Select entry).FirstOrDefault
+            If XLabel Is Nothing OrElse String.IsNullOrEmpty(XLabel.Value) AndAlso LanguageKey <> "de" Then XLabel = (From entry In XMDCat.Root.<Label> Where entry.Attribute(MDCFactory.LanguageNamespace + "lang").Value = "de" Select entry).FirstOrDefault
+            Dim CatLabel As String = XLabel.Value
+            Dim CatId As String = XMDCat.Root.@id
+
+            Dim md As XElement = MDDefs.Item(id)
+            Dim myMDType As String = "unbekannter Typ"
+            Try
+                myMDType = MDCFactory.MDDefTypes.Item(md.@type)
+            Catch ex As Exception
+                myMDType = "unbekannter Typ '" + md.@type + "'"
+            End Try
+            myreturn = New MDInfo With {
+                             .CatId = CatId, .CatLabel = CatLabel, .id = id, .typeLabel = myMDType,
+                             .Label = GetMDDefLabel(id, LanguageKey), .Description = GetMDDefDescription(id, LanguageKey)}
+        End If
         Return myreturn
     End Function
 End Class

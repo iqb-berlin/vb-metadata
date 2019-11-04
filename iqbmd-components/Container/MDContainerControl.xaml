@@ -9,14 +9,20 @@
              mc:Ignorable="d" 
              d:DesignHeight="300" d:DesignWidth="200">
     <DockPanel>
-        <StackPanel Orientation="Horizontal" DockPanel.Dock="Top">
+        <DockPanel.Resources>
+            <libcomp:BooleanVisibilityConverter x:Key="BooleanVisibilityConverter"/>
+        </DockPanel.Resources>
+        <DockPanel DockPanel.Dock="Top" LastChildFill="False">
             <libcomp:ButtonNewSmall Command="local:MDContainerControl.AddMD" Margin="2" ToolTip="Neue Eigenschaft hinzufügen" Panel.ZIndex="1"/>
             <libcomp:ButtonDeleteSmall Command="local:MDContainerControl.RemoveMD" VerticalAlignment="Center" ToolTip="Eigenschaft entfernen" Panel.ZIndex="2"/>
-        </StackPanel>
+            <libcomp:ButtonEditSmall Command="local:MDContainerControl.EditDefault" VerticalAlignment="Center" 
+                                     Visibility="{Binding RelativeSource={RelativeSource AncestorType={x:Type local:MDContainerControl}}, Path=CanDefaultEdit,Converter={StaticResource BooleanVisibilityConverter}}"
+                                     ToolTip="Standard-Eigenschaften ändern" Panel.ZIndex="2" DockPanel.Dock="Right"/>
+        </DockPanel>
 
         <local:MDListControl x:Name="MDLC"
                              XMDList="{Binding RelativeSource={RelativeSource AncestorType={x:Type local:MDContainerControl}}, Path=XMDList, Mode=OneWay}"
-                             MDDefaultList="{Binding RelativeSource={RelativeSource AncestorType={x:Type local:MDContainerControl}}, Path=MDDefaultList, Mode=OneWay}"
+                             XDefaultMDList="{Binding RelativeSource={RelativeSource AncestorType={x:Type local:MDContainerControl}}, Path=XDefaultMDList, Mode=OneWay}"
                              IsReadOnly="{Binding RelativeSource={RelativeSource AncestorType={x:Type local:MDContainerControl}}, Path=IsReadOnly, Mode=OneWay}"/>
     </DockPanel>
 </UserControl>

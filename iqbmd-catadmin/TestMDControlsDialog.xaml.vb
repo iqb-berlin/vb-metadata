@@ -5,7 +5,8 @@
         Me.AddHandler(iqb.md.components.LinkEditControl.DefaultFolderChangedEvent, New RoutedEventHandler(AddressOf HandleDefaultFolderChanged))
         TBInfo.Text = iqb.md.components.LinkEditControl.DefaultFolder
         Me.AddHandler(iqb.md.components.MDListControl.MDChangedEvent, New RoutedEventHandler(AddressOf MDChangedEventHandler))
-        Me.MDLC.MDCatList = New List(Of String) From {"file:\\huiqb39c.user.hu-berlin.de\IQBProjekte\MDC\GitHub\mdc-test.xml"}
+        Me.MDLC.MDCatList = New List(Of String) From {"DOI:10.5159/IQB_MDR_Core_v1", "file:\\huiqb39c.user.hu-berlin.de\IQBProjekte\MDC\GitHub\mdc-test.xml"}
+        Me.MDLC.MDFilters = New List(Of iqb.md.xml.MDFilter)
     End Sub
 
     Private Sub HandleDefaultFolderChanged()
@@ -27,7 +28,7 @@
         If Not String.IsNullOrEmpty(Me.TBStdXML.Text) Then
             Try
                 Dim xe As XElement = XElement.Parse(Me.TBStdXML.Text)
-                Me.MDLC.MDDefaultList = xe.Elements.ToList
+                Me.MDLC.XDefaultMDList = xe
             Catch ex As Exception
                 Debug.Print(ex.Message)
             End Try
@@ -45,7 +46,7 @@
         'Next
     End Sub
     Private Sub BtnDebugView_Clicked(sender As Object, e As RoutedEventArgs)
-        Dim XMD As XElement = Me.MDLC.XMDList
+        Dim XMD As XElement = Me.MDLC.XDefaultMDList
         Me.TBDebug.Text = XMD.ToString
     End Sub
 

@@ -15,13 +15,13 @@ Public Class MDListControl
         End Set
     End Property
 
-    Public Shared ReadOnly MDDefaultListProperty As DependencyProperty = DependencyProperty.Register("MDDefaultList", GetType(IEnumerable(Of XElement)), GetType(MDListControl), New FrameworkPropertyMetadata() With {.BindsTwoWayByDefault = False})
-    Public Property MDDefaultList As IEnumerable(Of XElement)
+    Public Shared ReadOnly XDefaultMDListProperty As DependencyProperty = DependencyProperty.Register("XDefaultMDList", GetType(XElement), GetType(MDListControl), New FrameworkPropertyMetadata() With {.BindsTwoWayByDefault = False})
+    Public Property XDefaultMDList As XElement
         Get
-            Return GetValue(MDDefaultListProperty)
+            Return GetValue(XDefaultMDListProperty)
         End Get
-        Set(ByVal value As IEnumerable(Of XElement))
-            SetValue(MDDefaultListProperty, value)
+        Set(ByVal value As XElement)
+            SetValue(XDefaultMDListProperty, value)
         End Set
     End Property
 

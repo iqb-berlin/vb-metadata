@@ -121,7 +121,7 @@ Public Class MDCFactory
         Return myreturn
     End Function
 
-    Public Shared Function GetMDList(CatIdList As List(Of String)) As List(Of MDInfo)
+    Public Shared Function GetMDList(CatIdList As List(Of String), Optional MDFilters As List(Of MDFilter) = Nothing) As List(Of MDInfo)
         Dim myreturn As New List(Of MDInfo)
         For Each catId As String In CatIdList
             Dim myCat As MDCat = GetMDC(catId)
@@ -135,12 +135,15 @@ Public Class MDCFactory
 
         Return myreturn
     End Function
-End Class
 
-Public Class MDInfo
-    Public Label As String
-    Public Description As String
-    Public CatId As String
-    Public CatLabel As String
-    Public id As String
+    Public Shared Function GetMDInfo(cat As String, def As String, Optional LanguageKey As String = "de") As MDInfo
+        Dim myreturn As MDInfo = Nothing
+        Dim myCat As MDCat = GetMDC(cat)
+        If myCat IsNot Nothing Then
+            myreturn = myCat.GetMDInfo(def, LanguageKey)
+            myreturn.CatId = cat
+        End If
+
+        Return myreturn
+    End Function
 End Class

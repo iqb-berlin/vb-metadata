@@ -6,6 +6,7 @@ Public Class MDContainerControl
 
     Public Shared ReadOnly AddMD As RoutedUICommand = New RoutedUICommand("Neue Eigenschaft", "AddMD", GetType(MDContainerControl))
     Public Shared ReadOnly RemoveMD As RoutedUICommand = New RoutedUICommand("Eigenschaft entfernen", "RemoveMD", GetType(MDContainerControl))
+    Public Shared ReadOnly EditDefault As RoutedUICommand = New RoutedUICommand("Standard-Eigenschaften ändern", "EditDefault", GetType(MDContainerControl))
 
     Public Shared ReadOnly XMDListProperty As DependencyProperty = DependencyProperty.Register("XMDList", GetType(XElement), GetType(MDContainerControl), New FrameworkPropertyMetadata() With {.BindsTwoWayByDefault = False})
     Public Property XMDList As XElement
@@ -17,13 +18,13 @@ Public Class MDContainerControl
         End Set
     End Property
 
-    Public Shared ReadOnly MDDefaultListProperty As DependencyProperty = DependencyProperty.Register("MDDefaultList", GetType(List(Of XElement)), GetType(MDContainerControl), New FrameworkPropertyMetadata() With {.BindsTwoWayByDefault = False})
-    Public Property MDDefaultList As List(Of XElement)
+    Public Shared ReadOnly XDefaultMDListProperty As DependencyProperty = DependencyProperty.Register("XDefaultMDList", GetType(XElement), GetType(MDContainerControl), New FrameworkPropertyMetadata() With {.BindsTwoWayByDefault = False})
+    Public Property XDefaultMDList As XElement
         Get
-            Return GetValue(MDDefaultListProperty)
+            Return GetValue(XDefaultMDListProperty)
         End Get
-        Set(ByVal value As List(Of XElement))
-            SetValue(MDDefaultListProperty, value)
+        Set(ByVal value As XElement)
+            SetValue(XDefaultMDListProperty, value)
         End Set
     End Property
 
@@ -47,10 +48,30 @@ Public Class MDContainerControl
         End Set
     End Property
 
+    Public Shared ReadOnly MDFiltersProperty As DependencyProperty = DependencyProperty.Register("MDFilters", GetType(List(Of MDFilter)), GetType(MDContainerControl), New FrameworkPropertyMetadata() With {.BindsTwoWayByDefault = False})
+    Public Property MDFilters As List(Of MDFilter)
+        Get
+            Return GetValue(MDFiltersProperty)
+        End Get
+        Set(ByVal value As List(Of MDFilter))
+            SetValue(MDFiltersProperty, value)
+        End Set
+    End Property
+
+    Public Shared ReadOnly CanDefaultEditProperty As DependencyProperty = DependencyProperty.Register("CanDefaultEdit", GetType(Boolean), GetType(MDContainerControl), New FrameworkPropertyMetadata() With {.BindsTwoWayByDefault = False})
+    Public Property CanDefaultEdit As Boolean
+        Get
+            Return GetValue(CanDefaultEditProperty)
+        End Get
+        Set(ByVal value As Boolean)
+            SetValue(CanDefaultEditProperty, value)
+        End Set
+    End Property
     '#################################################################################################
     Public Sub Me_Loaded() Handles Me.Loaded
         CommandBindings.Add(New CommandBinding(MDContainerControl.AddMD, AddressOf HandleAddMDExecuted, AddressOf HandleChangeMDCanExecute))
         CommandBindings.Add(New CommandBinding(MDContainerControl.RemoveMD, AddressOf HandleRemoveMDExecuted, AddressOf HandleChangeMDCanExecute))
+        CommandBindings.Add(New CommandBinding(MDContainerControl.EditDefault, AddressOf HandleEditDefaultExecuted, AddressOf HandleChangeMDCanExecute))
     End Sub
 
     Private Function HandleChangeMDCanExecute(sender As System.Object, e As System.Windows.Input.CanExecuteRoutedEventArgs)
@@ -65,7 +86,7 @@ Public Class MDContainerControl
             DialogFactory.MsgError(DialogFactory.GetParentWindow(Me), "Neue Eigenschaft", "Es sind keine zulässigen Kataloge zugewiesen.")
         Else
             Dim HabSchonMDList As List(Of String) = (From xs As XElement In XMDList.Elements Select xs.@cat + "##" + xs.@def).ToList
-            Dim AvailableMDList As List(Of XElement) = (From MDI As MDInfo In MDCFactory.GetMDList(MDCatList)
+            Dim AvailableMDList As List(Of XElement) = (From MDI As MDInfo In MDCFactory.GetMDList(MDCatList, MDFilters)
                                                         Let MDKey As String = MDI.CatId + "##" + MDI.id,
                                                             XMD As XElement = <p key=<%= MDKey %> cat=<%= MDI.CatLabel %>><%= MDI.Label %></p>
                                                         Where Not HabSchonMDList.Contains(MDKey)
@@ -118,5 +139,11 @@ Public Class MDContainerControl
                 Me.RaiseEvent(New RoutedEventArgs(MDListControl.MDChangedEvent))
             End If
         End If
+    End Sub
+
+    Private Sub HandleEditDefaultExecuted(sender As Object, e As ExecutedRoutedEventArgs)
+        Dim myDlg As New EditDefaultMDListDialog With {.Owner = iqb.lib.components.DialogFactory.GetParentWindow(Me),
+            .XDefaultMDList = Me.XDefaultMDList, .MDCatList = Me.MDCatList, .MDFilters = Me.MDFilters}
+        If myDlg.ShowDialog Then MDLC.Update()
     End Sub
 End Class
