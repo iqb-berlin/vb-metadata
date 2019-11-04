@@ -81,12 +81,14 @@ Class MainWindow
         CommandBindings.Add(New CommandBinding(AppCommands.SaveAs, AddressOf HandleSaveAsExecuted, AddressOf HandleCatLoadedCanExecute))
         CommandBindings.Add(New CommandBinding(IQBCommands.ReloadObject, AddressOf HandleReloadExecuted))
         CommandBindings.Add(New CommandBinding(AppCommands.OpenWebCat, AddressOf HandleOpenWebCatExecuted))
-        CommandBindings.Add(New CommandBinding(AppCommands.TestMDControls, AddressOf HandleTestMDControlsExecuted))
+        'CommandBindings.Add(New CommandBinding(AppCommands.TestMDControls, AddressOf HandleTestMDControlsExecuted))
         If iqb.lib.windows.ADFactory.GetMyName() = "mechtelm" Then CommandBindings.Add(New CommandBinding(AppCommands.SaveTheWorld, AddressOf HandleSaveTheWorldExecuted))
 
-        AppCommands.TestMDControls.Execute(Nothing, Nothing)
+        'AppCommands.TestMDControls.Execute(Nothing, Nothing)
+        Me.MDCC.MDCatList = New List(Of String) From {"DOI:10.5159/IQB_MDR_Core_v1"}
 
-        'ApplicationCommands.Open.Execute(Nothing, Nothing)
+        ApplicationCommands.Open.Execute(Nothing, Nothing)
+
 
     End Sub
 
@@ -251,7 +253,17 @@ Class MainWindow
         If Not String.IsNullOrEmpty(PreSelectedMDDefId) Then
             LBMetadatadefs.SelectedValue = PreSelectedMDDefId
         End If
+        Dim XDefaultMDListElement As XElement = XDocMCat.Root.Element("MDCatMetadata")
+        If XDefaultMDListElement Is Nothing Then
+            XDocMCat.Root.Add(<MDCatMetadata/>)
+            XDefaultMDListElement = XDocMCat.Root.Element("MDCatMetadata")
+        End If
+        Me.MDCC.XDefaultMDList = XDefaultMDListElement
 
+        For Each XMDDef As XElement In XDocMCat.Root.<MDDef>
+            Dim XMDDefMDElement As XElement = XMDDef.Element("MDDefMetadata")
+            If XMDDefMDElement Is Nothing Then XMDDef.Add(<MDDefMetadata/>)
+        Next
     End Sub
 
     Private Sub HandleEditCatMetadataExecuted(ByVal sender As Object, ByVal e As ExecutedRoutedEventArgs)

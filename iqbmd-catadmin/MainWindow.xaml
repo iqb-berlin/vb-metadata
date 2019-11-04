@@ -5,8 +5,8 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:iqb.md.catadmin"
         xmlns:comp="clr-namespace:iqb.lib.components;assembly=iqblib-components"
-        xmlns:mdccomp="clr-namespace:iqb.md.components;assembly=iqbmd-components"
-        xmlns:mdcxml="clr-namespace:iqb.md.xml;assembly=iqbmd-xml"
+        xmlns:mdcomp="clr-namespace:iqb.md.components;assembly=iqbmd-components"
+        xmlns:mdxml="clr-namespace:iqb.md.xml;assembly=iqbmd-xml"
         mc:Ignorable="d"
         Title="MainWindow" Height="450" Width="800" Icon="Resources/iqbmdc.ico">
     <Window.Resources>
@@ -17,7 +17,7 @@
             <comp:ObjectVisibilityNotNothingConverter x:Key="ObjectVisibilityNotNothingConverter"/>
             <comp:IntegerBooleanGreaterThen0Converter x:Key="IntegerBooleanGreaterThen0Converter"/>
             <local:DefTypeControlSelector x:Key="DefTypeControlSelector"/>
-            <ObjectDataProvider x:Key="MDCFactory" ObjectType="{x:Type mdcxml:MDCFactory}" />
+            <ObjectDataProvider x:Key="MDCFactory" ObjectType="{x:Type mdxml:MDCFactory}" />
         </DockPanel.Resources>
         <DockPanel DockPanel.Dock="Top" LastChildFill="False">
             <comp:ButtonOpen Margin="2" ToolTip="MD-Katalog öffnen (XML-Datei)"/>
@@ -102,6 +102,7 @@
                                               SelectedValuePath="Key"
                                               SelectedValue="{Binding Attribute[type].Value}"/>
                                 </DockPanel>
+                                <mdcomp:MDContainerControl Name="MDCC" XMDList="{Binding Element[MDDefMetadata]}" CanDefaultEdit="True"/>
                             </StackPanel>
                         </ScrollViewer>
                     </DockPanel>
