@@ -1,0 +1,22 @@
+﻿<UserControl x:Class="MDContainerControl"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:scm="clr-namespace:System.ComponentModel;assembly=WindowsBase"
+             xmlns:local="clr-namespace:iqb.md.components"
+             xmlns:libcomp="clr-namespace:iqb.lib.components;assembly=iqblib-components"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             mc:Ignorable="d" 
+             d:DesignHeight="300" d:DesignWidth="200">
+    <DockPanel>
+        <StackPanel Orientation="Horizontal" DockPanel.Dock="Top">
+            <libcomp:ButtonNewSmall Command="local:MDContainerControl.AddMD" Margin="2" ToolTip="Neue Eigenschaft hinzufügen" Panel.ZIndex="1"/>
+            <libcomp:ButtonDeleteSmall Command="local:MDContainerControl.RemoveMD" VerticalAlignment="Center" ToolTip="Eigenschaft entfernen" Panel.ZIndex="2"/>
+        </StackPanel>
+
+        <local:MDListControl x:Name="MDLC"
+                             XMDList="{Binding RelativeSource={RelativeSource AncestorType={x:Type local:MDContainerControl}}, Path=XMDList, Mode=OneWay}"
+                             MDDefaultList="{Binding RelativeSource={RelativeSource AncestorType={x:Type local:MDContainerControl}}, Path=MDDefaultList, Mode=OneWay}"
+                             IsReadOnly="{Binding RelativeSource={RelativeSource AncestorType={x:Type local:MDContainerControl}}, Path=IsReadOnly, Mode=OneWay}"/>
+    </DockPanel>
+</UserControl>

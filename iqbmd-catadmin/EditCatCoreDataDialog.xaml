@@ -1,0 +1,49 @@
+﻿<Window x:Class="EditCatCoreDataDialog"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:local="clr-namespace:iqb.md.catadmin"
+        
+        Icon="pack://application:,,,/iqblib-components;component/Resources/iqbGrau.ico"
+        ShowInTaskbar="False" 
+        WindowStartupLocation="CenterOwner"
+        Title="Kerndaten des Katalogs ändern" Height="700" Width="500">
+    <Window.Resources>
+        <ResourceDictionary Source="pack://application:,,,/iqblib-components;component/GlobalStyles.xaml"/>
+    </Window.Resources>
+    <DockPanel>
+        <ItemsControl Style="{StaticResource gsDialogBoxFooter}" DockPanel.Dock="Bottom" ItemContainerStyle="{StaticResource gsDialogBoxFooterButton}">
+            <Button Name="BtnOK" IsDefault="True">Schließen</Button>
+        </ItemsControl>
+        <StackPanel Margin="10" Name="StPRoot">
+            <DockPanel>
+                <TextBlock Width="100" VerticalAlignment="Center">ID</TextBlock>
+                <TextBox Text="{Binding Attribute[id].Value}"/>
+            </DockPanel>
+            <DockPanel>
+                <TextBlock Width="100" VerticalAlignment="Center">Version</TextBlock>
+                <TextBox Text="{Binding Attribute[version].Value}"/>
+            </DockPanel>
+            <DockPanel>
+                <TextBlock Width="100" VerticalAlignment="Center">Name</TextBlock>
+                <local:TextMultiLanguageControl XMD="{Binding}" Languages="de en" TagFilter="Label" Multiline="True"/>
+            </DockPanel>
+            <DockPanel>
+                <TextBlock Width="100" VerticalAlignment="Center">Beschreibung</TextBlock>
+                <local:TextMultiLanguageControl XMD="{Binding}" Languages="de en" TagFilter="Description" Multiline="True"/>
+            </DockPanel>
+            <DockPanel>
+                <TextBlock Width="100" VerticalAlignment="Center">Autor/Institution</TextBlock>
+                <local:TextMultiLanguageControl XMD="{Binding}" Languages="de en" TagFilter="Owner" Multiline="True"/>
+            </DockPanel>
+            <DockPanel>
+                <TextBlock Width="100" VerticalAlignment="Center">Lizenz</TextBlock>
+                <TextBox Text="{Binding Element[License].Value}"/>
+            </DockPanel>
+            <DockPanel>
+                <TextBlock Width="100" VerticalAlignment="Center">Version-History</TextBlock>
+                <TextBox Text="{Binding Attribute[versionhistory].Value}"/>
+            </DockPanel>
+
+        </StackPanel>
+    </DockPanel>
+</Window>

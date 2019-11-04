@@ -1,0 +1,39 @@
+﻿<local:MDBasisControl x:Class="TextMultiLanguageShowControl"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+            xmlns:comp="clr-namespace:iqb.lib.components;assembly=iqblib-components"
+            xmlns:local="clr-namespace:iqb.md.components">
+    <StackPanel>
+        <StackPanel.Resources>
+            <local:XLanguageAttributePolygonPointsConverter x:Key="XLanguageAttributePolygonPointsConverter"/>
+            <local:XLanguageAttribute2LettersConverter x:Key="XLanguageAttribute2LettersConverter"/>
+            <local:TextMultiLangMergeConverter x:Key="TextMultiLangMergeConverter"/>
+            <local:TypeSpecTextWrappingConverter x:Key="TypeSpecTextWrappingConverter"/>
+            <CollectionViewSource x:Key="CVSMDList" Source="{Binding Converter={StaticResource TextMultiLangMergeConverter}, UpdateSourceTrigger=PropertyChanged, Mode=OneWay}"/>
+        </StackPanel.Resources>
+        <ItemsControl ItemsSource="{Binding Source={StaticResource CVSMDList}}" Focusable="False">
+            <ItemsControl.ItemTemplate>
+                <DataTemplate>
+                    <DockPanel>
+                        <Grid DockPanel.Dock="Right" Width="16">
+                            <Viewbox Stretch="Fill">
+                                <Canvas Height="20" Width="20">
+                                    <Polygon Points="{Binding Converter={StaticResource XLanguageAttributePolygonPointsConverter}}" Fill="Gray" />
+                                </Canvas>
+                            </Viewbox>
+                            <TextBlock VerticalAlignment="Center" HorizontalAlignment="Left" Foreground="White" Margin="2 0 0 0"
+                                       Text="{Binding Converter={StaticResource XLanguageAttribute2LettersConverter}}" Background="Transparent">
+                                <TextBlock.Effect>
+                                    <DropShadowEffect Direction="0" Color="Gray" ShadowDepth="3"/>
+                                </TextBlock.Effect>
+                            </TextBlock>
+                        </Grid>
+
+                        <TextBlock Text="{Binding Value}" 
+                                 TextWrapping="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type local:TextMultiLanguageShowControl}}, Path=DataContext.TypeSpec, Converter={StaticResource TypeSpecTextWrappingConverter}}"/>
+                    </DockPanel>
+                </DataTemplate>
+            </ItemsControl.ItemTemplate>
+        </ItemsControl>    
+    </StackPanel>
+</local:MDBasisControl>

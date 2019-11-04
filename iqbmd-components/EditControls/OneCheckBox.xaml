@@ -1,0 +1,11 @@
+﻿<local:MDBasisControl x:Class="OneCheckBox"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+               
+             xmlns:local="clr-namespace:iqb.md.components">
+    <local:MDBasisControl.Resources>
+        <local:BooleanStringConverter x:Key="BooleanStringConverter"/>
+    </local:MDBasisControl.Resources>
+    <CheckBox IsChecked="{Binding Path=XMD.Value, Converter={StaticResource BooleanStringConverter}}" VerticalAlignment="Center" />
+</local:MDBasisControl>
