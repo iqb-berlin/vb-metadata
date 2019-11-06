@@ -146,4 +146,13 @@ Public Class MDCFactory
 
         Return myreturn
     End Function
+
+    Public Shared Function IsListDef(cat As String, def As String) As Boolean
+        Dim myreturn As Boolean = False
+        Dim myCat As MDCat = GetMDC(cat)
+        If myCat IsNot Nothing Then myreturn = myCat.IsListDef(def)
+
+        Return myreturn
+    End Function
+
 End Class

@@ -4,6 +4,9 @@ Public Class ListDefControl
     Shared ReadOnly Property LanguageNamespace As XNamespace = "http://www.w3.org/XML/1998/namespace"
 
     Private Sub UpdateValueList(Optional ValueKeyToSelect As String = "")
+        Dim be As BindingExpression = LBValues.GetBindingExpression(ListBox.ItemsSourceProperty)
+        If be IsNot Nothing Then be.UpdateTarget()
+
         Dim cv As CollectionView = CollectionViewSource.GetDefaultView(LBValues.ItemsSource)
         If cv IsNot Nothing Then cv.Refresh()
         If Not String.IsNullOrEmpty(ValueKeyToSelect) Then
@@ -59,13 +62,11 @@ Public Class ListDefControl
             Else
                 Dim XValueToMove As XElement = LBValues.SelectedItem
                 Dim XPrev As XElement = Nothing
-                For Each xe As XElement In XMDDef.Elements
-                    If xe.Name.LocalName = "Value" Then
-                        If xe.@id = XValueToMove.@id Then
-                            Exit For
-                        Else
-                            XPrev = xe
-                        End If
+                For Each xe As XElement In XMDDef.<Value>
+                    If xe.@id = XValueToMove.@id Then
+                        Exit For
+                    Else
+                        XPrev = xe
                     End If
                 Next
                 If XPrev IsNot Nothing Then

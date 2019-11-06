@@ -18,18 +18,21 @@ Public Class DefTypeControlSelector
     Public Overrides Function SelectTemplate(ByVal item As Object, ByVal container As System.Windows.DependencyObject) As System.Windows.DataTemplate
         Dim myControlType As Type = Nothing
         If item IsNot Nothing AndAlso TypeOf (item) Is String Then
-            If item = "integer" Then
-                myControlType = DefTypeControlSelector.GetControl("IntegerDefControl")
-            ElseIf item = "decimal" Then
-                myControlType = DefTypeControlSelector.GetControl("DecimalDefControl")
-            ElseIf item = "listsingleselect" OrElse item = "listmultiselect" Then
-                myControlType = DefTypeControlSelector.GetControl("ListDefControl")
-            ElseIf item = "boolean" OrElse item = "folderlink" OrElse item = "filelink" OrElse
-                item = "folderlink" OrElse item = "textde" OrElse item = "textmultilang" Then
-                myControlType = DefTypeControlSelector.GetControl("NoSpecDefControl")
-            Else
-                myControlType = DefTypeControlSelector.GetControl("UnknownTypeDefControl")
-            End If
+            Select Case item
+                Case "integer" : myControlType = DefTypeControlSelector.GetControl("IntegerDefControl")
+                Case "decimal" : myControlType = DefTypeControlSelector.GetControl("DecimalDefControl")
+                Case "listsingleselect",
+                     "listmultiselect" : myControlType = DefTypeControlSelector.GetControl("ListDefControl")
+                Case "boolean",
+                     "folderlink",
+                     "filelink",
+                     "folderlink",
+                     "textde",
+                     "date",
+                     "textmultilang" : myControlType = DefTypeControlSelector.GetControl("NoSpecDefControl")
+                Case Else
+                    myControlType = DefTypeControlSelector.GetControl("UnknownTypeDefControl")
+            End Select
         End If
         If myControlType Is Nothing Then
             Return Nothing

@@ -6,44 +6,47 @@
         Icon="pack://application:,,,/iqblib-components;component/Resources/iqbGrau.ico"
         ShowInTaskbar="False" 
         WindowStartupLocation="CenterOwner"
-        Title="Kerndaten des Katalogs ändern" Height="700" Width="500">
+        Title="Kerndaten des Katalogs ändern" Height="400" Width="400">
     <Window.Resources>
         <ResourceDictionary Source="pack://application:,,,/iqblib-components;component/GlobalStyles.xaml"/>
     </Window.Resources>
     <DockPanel>
         <ItemsControl Style="{StaticResource gsDialogBoxFooter}" DockPanel.Dock="Bottom" ItemContainerStyle="{StaticResource gsDialogBoxFooterButton}">
-            <Button Name="BtnOK" IsDefault="True">Schließen</Button>
+            <Button Name="BtnOK" IsDefault="True">Speichern</Button>
+            <Button Name="BtnCancel" IsDefault="False">Abbrechen</Button>
         </ItemsControl>
-        <StackPanel Margin="10" Name="StPRoot">
-            <DockPanel>
-                <TextBlock Width="100" VerticalAlignment="Center">ID</TextBlock>
-                <TextBox Text="{Binding Attribute[id].Value}"/>
-            </DockPanel>
-            <DockPanel>
-                <TextBlock Width="100" VerticalAlignment="Center">Version</TextBlock>
-                <TextBox Text="{Binding Attribute[version].Value}"/>
-            </DockPanel>
-            <DockPanel>
-                <TextBlock Width="100" VerticalAlignment="Center">Name</TextBlock>
-                <local:TextMultiLanguageControl XMD="{Binding}" Languages="de en" TagFilter="Label" Multiline="True"/>
-            </DockPanel>
-            <DockPanel>
-                <TextBlock Width="100" VerticalAlignment="Center">Beschreibung</TextBlock>
-                <local:TextMultiLanguageControl XMD="{Binding}" Languages="de en" TagFilter="Description" Multiline="True"/>
-            </DockPanel>
-            <DockPanel>
-                <TextBlock Width="100" VerticalAlignment="Center">Autor/Institution</TextBlock>
-                <local:TextMultiLanguageControl XMD="{Binding}" Languages="de en" TagFilter="Owner" Multiline="True"/>
-            </DockPanel>
-            <DockPanel>
-                <TextBlock Width="100" VerticalAlignment="Center">Lizenz</TextBlock>
-                <TextBox Text="{Binding Element[License].Value}"/>
-            </DockPanel>
-            <DockPanel>
-                <TextBlock Width="100" VerticalAlignment="Center">Version-History</TextBlock>
-                <TextBox Text="{Binding Attribute[versionhistory].Value}"/>
-            </DockPanel>
+        <ScrollViewer Margin="10" HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Auto">
+            <StackPanel Name="StPRoot">
+                <DockPanel>
+                    <TextBlock Width="100" VerticalAlignment="Center">ID</TextBlock>
+                    <TextBox Name="TBID"/>
+                </DockPanel>
+                <DockPanel>
+                    <TextBlock Width="100" VerticalAlignment="Center">Version</TextBlock>
+                    <TextBox Name="TBVersion"/>
+                </DockPanel>
+                <DockPanel>
+                    <TextBlock Width="100" VerticalAlignment="Center">Name</TextBlock>
+                    <local:TextMultiLanguageControl x:Name="TMLCName" Languages="de en" TagFilter="Label" Multiline="True"/>
+                </DockPanel>
+                <DockPanel>
+                    <TextBlock Width="100" VerticalAlignment="Center">Beschreibung</TextBlock>
+                    <local:TextMultiLanguageControl x:Name="TMLCDescr" Languages="de en" TagFilter="Description" Multiline="True"/>
+                </DockPanel>
+                <DockPanel>
+                    <TextBlock Width="100" VerticalAlignment="Center">Autor/Institution</TextBlock>
+                    <local:TextMultiLanguageControl x:Name="TMLCOwner" Languages="de en" TagFilter="Owner" Multiline="True"/>
+                </DockPanel>
+                <DockPanel>
+                    <TextBlock Width="100" VerticalAlignment="Center">Lizenz</TextBlock>
+                    <TextBox Name="TBLicense"/>
+                </DockPanel>
+                <DockPanel>
+                    <TextBlock Width="100" VerticalAlignment="Center">Version-History</TextBlock>
+                    <TextBox Name="TBVersionHistory"/>
+                </DockPanel>
 
-        </StackPanel>
+            </StackPanel>
+        </ScrollViewer>
     </DockPanel>
 </Window>

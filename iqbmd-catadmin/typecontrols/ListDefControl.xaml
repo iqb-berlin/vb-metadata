@@ -8,7 +8,7 @@
              xmlns:mdccomp="clr-namespace:iqb.md.components;assembly=iqbmd-components"
              xmlns:mdcxml="clr-namespace:iqb.md.xml;assembly=iqbmd-xml"
              mc:Ignorable="d" 
-             d:DesignHeight="50" d:DesignWidth="200">
+             d:DesignHeight="500" d:DesignWidth="200">
     <StackPanel DataContext="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ScrollViewer}}, Path=DataContext}" Name="StPRoot">
         <StackPanel.Resources>
             <local:XMDDefTypeSpecConverter x:Key="XMDDefTypeSpecConverter"/>

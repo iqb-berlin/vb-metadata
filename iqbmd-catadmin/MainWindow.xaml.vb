@@ -14,9 +14,11 @@ Class MainWindow
         End Set
     End Property
 
-    Private NewMDDefId As String = Nothing
     Private XDocMCatChanged As Boolean = False
     Private XDocMCatFilename As String = Nothing
+    Private MDCoreCats As New List(Of String) From {"DOI:10.5159/IQB_MDR_Core_v1"}
+    Private nextMDDefid As Integer = 0
+    Private MDDefFilter As iqb.md.xml.MDFilter = Nothing
 
     Private Sub MainApplication_Loaded(ByVal sender As System.Object, ByVal e As System.Windows.RoutedEventArgs) Handles Me.Loaded
         AddHandler AppDomain.CurrentDomain.UnhandledException, AddressOf MyUnhandledExceptionEventHandler
@@ -75,21 +77,27 @@ Class MainWindow
 
         CommandBindings.Add(New CommandBinding(MainWindow.ClearSearchString, AddressOf HandleClearSearchStringExecuted))
 
-        CommandBindings.Add(New CommandBinding(ApplicationCommands.Open, AddressOf HandleOpenExecuted)) 'Studie wählen
+        CommandBindings.Add(New CommandBinding(AppCommands.NewCatalog, AddressOf HandleNewCatalogExecuted))
+        CommandBindings.Add(New CommandBinding(ApplicationCommands.Open, AddressOf HandleOpenExecuted))
         CommandBindings.Add(New CommandBinding(ApplicationCommands.Save, AddressOf HandleSaveExecuted, AddressOf HandleSaveCanExecute))
-        CommandBindings.Add(New CommandBinding(AppCommands.EditCatMetadata, AddressOf HandleEditCatMetadataExecuted, AddressOf HandleCatLoadedCanExecute))
+        CommandBindings.Add(New CommandBinding(AppCommands.EditCatData, AddressOf HandleEditCatMetadataExecuted, AddressOf HandleCatLoadedCanExecute))
         CommandBindings.Add(New CommandBinding(AppCommands.SaveAs, AddressOf HandleSaveAsExecuted, AddressOf HandleCatLoadedCanExecute))
         CommandBindings.Add(New CommandBinding(IQBCommands.ReloadObject, AddressOf HandleReloadExecuted))
         CommandBindings.Add(New CommandBinding(AppCommands.OpenWebCat, AddressOf HandleOpenWebCatExecuted))
+        CommandBindings.Add(New CommandBinding(AppCommands.EditMDCoreCats, AddressOf HandleEditMDCoreCatsExecuted))
+        CommandBindings.Add(New CommandBinding(ApplicationCommands.[New], AddressOf HandleAddMDDefExecuted, AddressOf HandleCatLoadedCanExecute))
+        CommandBindings.Add(New CommandBinding(ApplicationCommands.Delete, AddressOf HandleDeleteMDDefExecuted, AddressOf HandleDeleteMDDefCanExecute))
+        CommandBindings.Add(New CommandBinding(IQBCommands.Filter, AddressOf HandleFilterExecuted))
+        CommandBindings.Add(New CommandBinding(IQBCommands.FilterRemove, AddressOf HandleFilterRemoveExecuted, AddressOf HandleFilterRemoveCanExecuted))
+        CommandBindings.Add(New CommandBinding(AppCommands.NewCatalogFromOld, AddressOf HandleNewCatalogFromOldExecuted))
+
         'CommandBindings.Add(New CommandBinding(AppCommands.TestMDControls, AddressOf HandleTestMDControlsExecuted))
         If iqb.lib.windows.ADFactory.GetMyName() = "mechtelm" Then CommandBindings.Add(New CommandBinding(AppCommands.SaveTheWorld, AddressOf HandleSaveTheWorldExecuted))
 
         'AppCommands.TestMDControls.Execute(Nothing, Nothing)
-        Me.MDCC.MDCatList = New List(Of String) From {"DOI:10.5159/IQB_MDR_Core_v1"}
+        Me.MDCC.MDCatList = MDCoreCats
 
         ApplicationCommands.Open.Execute(Nothing, Nothing)
-
-
     End Sub
 
     Private Sub MyUnhandledExceptionEventHandler(sender As Object, e As UnhandledExceptionEventArgs)
@@ -124,15 +132,12 @@ Class MainWindow
     End Sub
     '############################################################################################
     Public Function FilterList(item As Object) As Boolean
+        Dim XMDef As XElement = item
         If String.IsNullOrEmpty(TBSearchString.Text) Then
-            Return True
+            Return MDDefFilter Is Nothing OrElse MDDefFilter.IsMatch(XMDef.<MDDefMetadata>.FirstOrDefault)
         Else
             Dim sstr As String = TBSearchString.Text.ToUpper
-            If item IsNot Nothing AndAlso TypeOf (item) Is XElement Then
-                Return CType(item, XElement).Element("Label").Value.ToUpper.IndexOf(sstr) >= 0
-            Else
-                Return False
-            End If
+            Return XMDef.<Label>.First.Value.ToUpper.IndexOf(sstr) >= 0 AndAlso (MDDefFilter Is Nothing OrElse MDDefFilter.IsMatch(XMDef.<MDDefMetadata>.FirstOrDefault))
         End If
     End Function
 
@@ -145,6 +150,59 @@ Class MainWindow
         TBSearchString.Text = ""
         TBSearchString.Focus()
     End Sub
+
+    Private Sub HandleFilterExecuted(ByVal sender As Object, ByVal e As ExecutedRoutedEventArgs)
+        Dim cv As CollectionView = CollectionViewSource.GetDefaultView(LBMetadatadefs.ItemsSource)
+        If XDocMCat IsNot Nothing AndAlso cv IsNot Nothing Then
+            Dim myMDList As New Dictionary(Of String, List(Of String))
+            For Each XMD As XElement In XDocMCat.Root.<MDDef>
+                Dim myMDDefMDList As XElement = XMD.<MDDefMetadata>.FirstOrDefault
+                If myMDDefMDList IsNot Nothing Then
+                    For Each xe As XElement In myMDDefMDList.Elements
+                        If iqb.md.xml.MDCFactory.IsListDef(xe.@cat, xe.@def) Then
+                            If Not myMDList.ContainsKey(xe.@cat) Then myMDList.Add(xe.@cat, New List(Of String))
+                            Dim defs As List(Of String) = myMDList.Item(xe.@cat)
+                            If Not defs.Contains(xe.@def) Then defs.Add(xe.@def)
+                        End If
+                    Next
+                End If
+            Next
+            If myMDList.Count = 0 Then
+                DialogFactory.MsgWarning(Me, "Eigenschaften filtern", "Die Definitionen des aktuellen Katalogs haben keine Metadaten. Ein Filter kann daher nicht gesetzt werden.")
+            Else
+                Dim XDefaults As XElement = <Defaults></Defaults>
+                XDefaults.Add(From cat As KeyValuePair(Of String, List(Of String)) In myMDList
+                              From def As String In cat.Value
+                              Let XDef As XElement = <MD cat=<%= cat.Key %> def=<%= def %>/>
+                              Select XDef)
+                Dim XFilter As XElement = <FList></FList>
+                If MDDefFilter IsNot Nothing Then XFilter = MDDefFilter.ToXML
+                Dim myDlg As New iqb.md.components.EditMDListDialog(XFilter, XDefaults,
+                                                                    "Bitte zulässige Eigenschaftswerte auswählen! Die Eigenschaften werden beim Filtern mit 'UND', die Werte werden jeweils mit 'ODER' verknüpft") With
+                                                                    {.Owner = Me, .Title = "Filter setzen"}
+
+                If myDlg.ShowDialog() Then
+                    MDDefFilter = New xml.MDFilter(XFilter)
+                    TBFilterScope.Text = "Filter gesetzt"
+                    cv.Refresh()
+                End If
+            End If
+        End If
+    End Sub
+
+    Private Sub HandleFilterRemoveExecuted(ByVal sender As Object, ByVal e As ExecutedRoutedEventArgs)
+        Me.MDDefFilter = Nothing
+        TBFilterScope.Text = ""
+
+        Dim cv As CollectionView = CollectionViewSource.GetDefaultView(LBMetadatadefs.ItemsSource)
+        If cv IsNot Nothing Then cv.Refresh()
+    End Sub
+
+    Private Function HandleFilterRemoveCanExecuted(ByVal sender As Object, ByVal e As System.Windows.Input.CanExecuteRoutedEventArgs) As Boolean
+        e.CanExecute = MDDefFilter IsNot Nothing AndAlso MDDefFilter.Count > 0
+        Return e.CanExecute
+    End Function
+    '############################################################################################
     Private Sub Me_Closing(ByVal sender As Object, ByVal e As System.ComponentModel.CancelEventArgs) Handles Me.Closing
         If XDocMCatChanged AndAlso
             DialogFactory.YesNo(Me, My.Application.Info.AssemblyName, "Der Katalog wurde geändert. Soll er vor dem Schließen gespeichert werden?") = vbOK Then
@@ -154,8 +212,47 @@ Class MainWindow
     Private Sub HandleReloadExecuted(ByVal sender As Object, ByVal e As ExecutedRoutedEventArgs)
         iqb.md.xml.MDCFactory.ResetCatalogList()
     End Sub
+
+    Private Sub HandleNewCatalogExecuted(ByVal sender As Object, ByVal e As ExecutedRoutedEventArgs)
+        Dim mbresult As MessageBoxResult = MessageBoxResult.OK
+        If XDocMCatChanged Then
+            mbresult = DialogFactory.YesNoCancel(Me, My.Application.Info.AssemblyName, "Der Katalog wurde geändert. Soll er vor dem Schließen gespeichert werden?")
+            If mbresult = MessageBoxResult.OK Then
+                ApplicationCommands.Save.Execute(Nothing, Nothing)
+            End If
+        End If
+        If mbresult <> MessageBoxResult.Cancel Then
+            If XDocMCat IsNot Nothing Then
+                RemoveHandler XDocMCat.Root.Changed, AddressOf Notify_XDocMCatChanged
+            End If
+            XDocMCat = <?xml version="1.0" encoding="utf-8"?>
+                       <MDCat xsi:noNamespaceSchemaLocation="http://raw.githubusercontent.com/iqb-mdc/core/master/mdc.xsd"
+                           xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                           id=""
+                           version="" versionhistory="">
+                           <Label xml:lang="de">Neuer Katalog</Label>
+                           <Description xml:lang="de">Neuer Katalog - Beschreibung</Description>
+                           <Owner xml:lang="de">IQB - Institut zur Qualitätsentwicklung im Bildungswesen</Owner>
+                           <Owner xml:lang="en">IQB - Institute for Educational Quality Improvement</Owner>
+                           <License>MIT</License>
+                           <DefaultMDDefMetadata/>
+                       </MDCat>
+            AddHandler XDocMCat.Root.Changed, AddressOf Notify_XDocMCatChanged
+            XDocMCatChanged = False
+            XDocMCatFilename = Nothing
+            Me.Title = My.Application.Info.AssemblyName + " - [neu]"
+            UpdateMDDefControls()
+        End If
+    End Sub
+
     Private Sub HandleOpenExecuted(ByVal sender As Object, ByVal e As ExecutedRoutedEventArgs)
-        Dim filepicker As New Microsoft.Win32.OpenFileDialog With {.FileName = My.Settings.lastfile_mdcat, .Filter = "XML-Dateien|*.xml",
+        Dim fname As String = ""
+        Dim fdir As String = ""
+        If Not String.IsNullOrEmpty(My.Settings.lastfile_mdcat) Then
+            fname = IO.Path.GetFileName(My.Settings.lastfile_mdcat)
+            fdir = IO.Path.GetDirectoryName(My.Settings.lastfile_mdcat)
+        End If
+        Dim filepicker As New Microsoft.Win32.OpenFileDialog With {.FileName = fname, .Filter = "XML-Dateien|*.xml", .InitialDirectory = fdir,
                                                                            .DefaultExt = "Xml", .Title = "MD-Katalog öffnen"}
         If filepicker.ShowDialog Then
             My.Settings.lastfile_mdcat = filepicker.FileName
@@ -175,7 +272,7 @@ Class MainWindow
                     XDocMCatFilename = Nothing
                 End If
                 Me.Title = My.Application.Info.AssemblyName + " - " + IO.Path.GetFileName(XDocMCatFilename)
-                LoadMDDefList()
+                UpdateMDDefControls()
             Catch ex As Exception
                 DialogFactory.MsgError(Me, "MD-Katalog öffnen", "Konnte Datei nicht öffnen:" + vbNewLine + ex.Message)
             End Try
@@ -230,45 +327,65 @@ Class MainWindow
         SaveFile(True)
     End Sub
 
-    Private Sub LoadMDDefList(Optional PreSelectedMDDefId As String = Nothing)
+    Private Sub UpdateMDDefControls()
+        Me.MDDefFilter = Nothing
+        TBFilterScope.Text = ""
+
+        If XDocMCat Is Nothing Then
+            Me.MDCC.XDefaultMDList = Nothing
+        Else
+            Dim XDefaultMDListElement As XElement = XDocMCat.Root.Element("DefaultMDDefMetadata")
+            If XDefaultMDListElement Is Nothing Then
+                XDocMCat.Root.Add(<DefaultMDDefMetadata/>)
+                XDefaultMDListElement = XDocMCat.Root.Element("DefaultMDDefMetadata")
+            End If
+            Me.MDCC.XDefaultMDList = XDefaultMDListElement
+
+            Dim tmpint As Integer = 0
+            nextMDDefid = 0
+            For Each XMDDef As XElement In XDocMCat.Root.<MDDef>
+                tmpint = Integer.Parse(XMDDef.@id)
+                If tmpint > nextMDDefid Then nextMDDefid = tmpint
+
+                Dim XMDDefMDElement As XElement = XMDDef.Element("MDDefMetadata")
+                If XMDDefMDElement Is Nothing Then XMDDef.Add(<MDDefMetadata/>)
+            Next
+            nextMDDefid += 1
+        End If
+        UpdateMDDefList()
+    End Sub
+
+    Private Sub UpdateMDDefList(Optional NewMDDefId As String = Nothing)
         If XDocMCat Is Nothing Then
             LBMetadatadefs.ItemsSource = Nothing
         Else
             LBMetadatadefs.ItemsSource = XDocMCat.Root.Elements("MDDef")
-        End If
+            Dim cv As CollectionView = CollectionViewSource.GetDefaultView(LBMetadatadefs.ItemsSource)
+            If cv IsNot Nothing Then
+                cv.SortDescriptions.Add(New ComponentModel.SortDescription("Element[Label].Value", ComponentModel.ListSortDirection.Ascending))
+                cv.Filter = AddressOf FilterList
+                cv.MoveCurrentToFirst()
+            End If
 
-        Dim cv As CollectionView = CollectionViewSource.GetDefaultView(LBMetadatadefs.ItemsSource)
-        If cv IsNot Nothing Then
-            'cv.GroupDescriptions.Add(New PropertyGroupDescription("Attribute[group].Value"))
-            cv.SortDescriptions.Add(New ComponentModel.SortDescription("Element[Label].Value", ComponentModel.ListSortDirection.Ascending))
-            cv.Filter = AddressOf FilterList
-            cv.MoveCurrentToFirst()
+            If Not String.IsNullOrEmpty(NewMDDefId) Then LBMetadatadefs.SelectedValue = NewMDDefId
         End If
-
-        If Not String.IsNullOrEmpty(NewMDDefId) Then
-            PreSelectedMDDefId = NewMDDefId
-            NewMDDefId = Nothing
-        End If
-
-        If Not String.IsNullOrEmpty(PreSelectedMDDefId) Then
-            LBMetadatadefs.SelectedValue = PreSelectedMDDefId
-        End If
-        Dim XDefaultMDListElement As XElement = XDocMCat.Root.Element("MDCatMetadata")
-        If XDefaultMDListElement Is Nothing Then
-            XDocMCat.Root.Add(<MDCatMetadata/>)
-            XDefaultMDListElement = XDocMCat.Root.Element("MDCatMetadata")
-        End If
-        Me.MDCC.XDefaultMDList = XDefaultMDListElement
-
-        For Each XMDDef As XElement In XDocMCat.Root.<MDDef>
-            Dim XMDDefMDElement As XElement = XMDDef.Element("MDDefMetadata")
-            If XMDDefMDElement Is Nothing Then XMDDef.Add(<MDDefMetadata/>)
-        Next
     End Sub
 
     Private Sub HandleEditCatMetadataExecuted(ByVal sender As Object, ByVal e As ExecutedRoutedEventArgs)
-        Dim myDlg As New EditCatCoreDataDialog With {.Owner = Me, .Title = AppCommands.EditCatMetadata.Text, .XCat = Me.XDocMCat}
+        Dim myDlg As New EditCatCoreDataDialog(Me.XDocMCat) With {.Owner = Me, .Title = AppCommands.EditCatData.Text}
         myDlg.ShowDialog()
+    End Sub
+
+    Private Sub HandleEditMDCoreCatsExecuted(ByVal sender As Object, ByVal e As ExecutedRoutedEventArgs)
+        Dim myCoreCatsStr As String = String.Join(vbCrLf, MDCoreCats)
+        Dim myCoreCatsStrNew As String =
+            DialogFactory.InputTextMultiLine(Me,
+                                             AppCommands.EditMDCoreCats.Text,
+                                             "Pro Katalog bitte eine Zeile verwenden",
+                                             myCoreCatsStr,
+                                             "Diese Kataloge werden genutzt, um Metadaten für die Definitionen des aktuellen Katalogs auszuwählen." + vbNewLine +
+                                             "Achtung: Die Änderungen sind bis zum Beenden der Anwendung wirksam. Nach dem Neustart wird der Standard wiederhergestellt.")
+        If Not String.IsNullOrEmpty(myCoreCatsStrNew) Then MDCoreCats = myCoreCatsStrNew.Split({vbCrLf}, StringSplitOptions.RemoveEmptyEntries).ToList
     End Sub
 
     Private Sub HandleOpenWebCatExecuted(ByVal sender As Object, ByVal e As ExecutedRoutedEventArgs)
@@ -329,7 +446,7 @@ Class MainWindow
                         XDocMCatChanged = False
                         XDocMCatFilename = Nothing
                         Me.Title = newAppTitle
-                        LoadMDDefList()
+                        UpdateMDDefControls()
                     Catch ex As Exception
                         DialogFactory.MsgError(Me, "MD-Katalog öffnen", "Konnte Datei nicht öffnen:" + vbNewLine + ex.Message)
                     End Try
@@ -338,6 +455,44 @@ Class MainWindow
         End If
     End Sub
 
+    '#######################################################################
+    Private Sub HandleAddMDDefExecuted(ByVal sender As Object, ByVal e As ExecutedRoutedEventArgs)
+        If Me.XDocMCat IsNot Nothing Then
+            Dim NewMDDefLabel As String = DialogFactory.InputText(Me, "Neue MD-Definition", "Bitte Name eingeben", "", "")
+            If Not String.IsNullOrEmpty(NewMDDefLabel) Then
+                Dim NewMDDefId As String = nextMDDefid.ToString
+                nextMDDefid += 1
+
+                Dim XNewMDDef As XElement = <MDDef id=<%= NewMDDefId %> type="">
+                                                <Label xml:lang="de"><%= NewMDDefLabel %></Label>
+                                                <MDDefMetadata/>
+                                                <TypeSpec/>
+                                                <DefaultValue/>
+                                            </MDDef>
+                Me.XDocMCat.Root.Add(XNewMDDef)
+                XDocMCatChanged = True
+                UpdateMDDefList(NewMDDefId)
+            End If
+        End If
+    End Sub
+
+    Private Function HandleDeleteMDDefCanExecute(sender As System.Object, e As System.Windows.Input.CanExecuteRoutedEventArgs)
+        e.CanExecute = Me.XDocMCat IsNot Nothing AndAlso LBMetadatadefs.SelectedItems.Count > 0
+        Return e.CanExecute
+    End Function
+
+    Private Sub HandleDeleteMDDefExecuted(ByVal sender As Object, ByVal e As ExecutedRoutedEventArgs)
+        If Me.XDocMCat IsNot Nothing AndAlso LBMetadatadefs.SelectedItems.Count > 0 Then
+            Dim XDef2Remove As XElement = LBMetadatadefs.SelectedItem
+            If DialogFactory.YesNoCancel(Me, "Definition löschen", "Soll Defintion '" + XDef2Remove.<Label>.First.Value + "' mit ID '" + XDef2Remove.@id + "' gelöscht werden?") = MessageBoxResult.OK Then
+                XDef2Remove.Remove()
+                XDocMCatChanged = True
+                UpdateMDDefList()
+            End If
+        End If
+    End Sub
+
+    '#######################################################################
     Private Sub HandleTestMDControlsExecuted(ByVal sender As Object, ByVal e As ExecutedRoutedEventArgs)
         Dim myDlg As New TestMDControlsDialog With {.Owner = Me}
         myDlg.ShowDialog()
@@ -363,6 +518,48 @@ Class MainWindow
             End Using
 
             DialogFactory.Msg(Me, "DOI-Check", "Antwort: " + vbNewLine + myResponse)
+        End If
+    End Sub
+
+    Private Sub HandleNewCatalogFromOldExecuted(ByVal sender As Object, ByVal e As ExecutedRoutedEventArgs)
+        Dim mbresult As MessageBoxResult = MessageBoxResult.OK
+        If XDocMCatChanged Then
+            mbresult = DialogFactory.YesNoCancel(Me, My.Application.Info.AssemblyName, "Der Katalog wurde geändert. Soll er vor dem Schließen gespeichert werden?")
+            If mbresult = MessageBoxResult.OK Then
+                ApplicationCommands.Save.Execute(Nothing, Nothing)
+            End If
+        End If
+        If mbresult <> MessageBoxResult.Cancel Then
+            Dim fname As String = ""
+            Dim fdir As String = ""
+            If Not String.IsNullOrEmpty(My.Settings.last_oldcatfilename) Then
+                fname = IO.Path.GetFileName(My.Settings.last_oldcatfilename)
+                fdir = IO.Path.GetDirectoryName(My.Settings.last_oldcatfilename)
+            End If
+
+
+            Dim filepicker As New Microsoft.Win32.OpenFileDialog With {.FileName = fname, .Filter = "XML-ZIP-Dateien|*.zip", .InitialDirectory = fdir,
+                                                                           .DefaultExt = "Xml", .Title = "Alten MDR-Katalog öffnen"}
+            If filepicker.ShowDialog Then
+                My.Settings.last_oldcatfilename = filepicker.FileName
+                My.Settings.Save()
+
+                Try
+                    XDocMCat = MDR2MDC.TransformOld(filepicker.FileName)
+
+                    If XDocMCat IsNot Nothing Then
+                        RemoveHandler XDocMCat.Root.Changed, AddressOf Notify_XDocMCatChanged
+                    End If
+
+                    AddHandler XDocMCat.Root.Changed, AddressOf Notify_XDocMCatChanged
+                    XDocMCatChanged = False
+                    XDocMCatFilename = Nothing
+                    Me.Title = My.Application.Info.AssemblyName + " - [neu von alt]"
+                    UpdateMDDefControls()
+                Catch ex As Exception
+                    DialogFactory.MsgError(Me, "MD-Katalog öffnen", "Konnte Datei nicht öffnen:" + vbNewLine + ex.Message)
+                End Try
+            End If
         End If
     End Sub
 

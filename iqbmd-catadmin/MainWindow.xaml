@@ -4,7 +4,7 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:iqb.md.catadmin"
-        xmlns:comp="clr-namespace:iqb.lib.components;assembly=iqblib-components"
+        xmlns:libcomp="clr-namespace:iqb.lib.components;assembly=iqblib-components"
         xmlns:mdcomp="clr-namespace:iqb.md.components;assembly=iqbmd-components"
         xmlns:mdxml="clr-namespace:iqb.md.xml;assembly=iqbmd-xml"
         mc:Ignorable="d"
@@ -14,26 +14,34 @@
     </Window.Resources>
     <DockPanel>
         <DockPanel.Resources>
-            <comp:ObjectVisibilityNotNothingConverter x:Key="ObjectVisibilityNotNothingConverter"/>
-            <comp:IntegerBooleanGreaterThen0Converter x:Key="IntegerBooleanGreaterThen0Converter"/>
+            <libcomp:ObjectVisibilityNotNothingConverter x:Key="ObjectVisibilityNotNothingConverter"/>
+            <libcomp:IntegerBooleanGreaterThen0Converter x:Key="IntegerBooleanGreaterThen0Converter"/>
             <local:DefTypeControlSelector x:Key="DefTypeControlSelector"/>
             <ObjectDataProvider x:Key="MDCFactory" ObjectType="{x:Type mdxml:MDCFactory}" />
         </DockPanel.Resources>
-        <DockPanel DockPanel.Dock="Top" LastChildFill="False">
-            <comp:ButtonOpen Margin="2" ToolTip="MD-Katalog öffnen (XML-Datei)"/>
-            <comp:ButtonSave Margin="2" ToolTip="Speichern"/>
-            <comp:ButtonReload Margin="2" ToolTip="Katalog-Puffer löschen"/>
-            <comp:ButtonHelp DockPanel.Dock="Right" Margin="2"/>
+        <DockPanel DockPanel.Dock="Top" LastChildFill="False" Background="WhiteSmoke">
+            <libcomp:ButtonOpen Margin="2" ToolTip="MD-Katalog öffnen (XML-Datei)"/>
+            <libcomp:ButtonSave Margin="2" ToolTip="Speichern"/>
+            <libcomp:ButtonReload Margin="2" ToolTip="Katalog-Puffer löschen"/>
+            <TextBlock Name="TBFilterScope" VerticalAlignment="Center" Margin="3" Foreground="Red" FontWeight="Bold"/>
+            <libcomp:ButtonHelp DockPanel.Dock="Right" Margin="2"/>
             <Menu DockPanel.Dock="Right" Background="Transparent">
                 <MenuItem>
                     <MenuItem.Header>
                        <Image Source="Resources/278796.png" Width="20"/>
                     </MenuItem.Header>
-                    <MenuItem Command="local:AppCommands.SaveAs"/>
+                    <MenuItem Command="local:AppCommands.NewCatalog"/>
+                    <MenuItem Command="local:AppCommands.NewCatalogFromOld"/>
+                    <MenuItem Command="Open" Header="Öffnen Katalog-Datei"/>
                     <MenuItem Command="local:AppCommands.OpenWebCat"/>
-                    <MenuItem Command="local:AppCommands.EditCatMetadata"/>
+                    <MenuItem Command="local:AppCommands.SaveAs"/>
                     <Separator/>
-                    <MenuItem Command="local:AppCommands.TestMDControls"/>
+                    <MenuItem Command="local:AppCommands.EditMDCoreCats"/>
+                    <MenuItem Command="local:AppCommands.EditCatData"/>
+                    <!--<MenuItem Command="libcomp:IQBCommands.Report" Header="Docx-Report des Katalogs erzeugen"/>-->
+                    <Separator/>
+                    <MenuItem Command="New" Header="Neue MD-Definition"/>
+                    <MenuItem Command="Delete" Header="MD-Definition(en) löschen"/>
                 </MenuItem>
             </Menu>
         </DockPanel>
@@ -49,14 +57,18 @@
                         <KeyBinding Key="Escape" Command="local:MainWindow.ClearSearchString"/>
                     </DockPanel.InputBindings>
                     <StackPanel Orientation="Horizontal">
-                        <comp:ButtonNewSmall VerticalAlignment="Center" ToolTip="Neue MD-Definition" Command="New"/>
-                        <comp:ButtonDeleteSmall VerticalAlignment="Center" ToolTip="MD-Definition(en) löschen" Command="Delete" Margin="3"/>
+                        <libcomp:ButtonNewSmall VerticalAlignment="Center" ToolTip="Neue MD-Definition" Command="New"/>
+                        <libcomp:ButtonDeleteSmall VerticalAlignment="Center" ToolTip="MD-Definition(en) löschen" Command="Delete" Margin="3"/>
                     </StackPanel>
-                    <comp:ButtonSearchOrZoomSmall DockPanel.Dock="Right" VerticalAlignment="Center" Command="local:MainWindow.ClearSearchString" ToolTip="Filter"/>
+
+                    <libcomp:ButtonFilter Margin="0 0 2 0"/>
+                    <libcomp:ButtonFilterRemove/>
+
+                    <libcomp:ButtonSearchOrZoomSmall DockPanel.Dock="Right" VerticalAlignment="Center" Command="local:MainWindow.ClearSearchString" ToolTip="Filter"/>
                     <TextBox Name="TBSearchString" Margin="4 0 4 0" TextChanged="TBSearchString_Changed"/>
                 </DockPanel>
                 <ListBox Name="LBMetadatadefs" SelectionMode="Single" ItemContainerStyle="{StaticResource gsStandardListBoxItem}"
-                         Margin="2 2 0 0" IsSynchronizedWithCurrentItem="False" SelectedValuePath="Attribute[id].Value"
+                         Margin="2 0 0 0" IsSynchronizedWithCurrentItem="False" SelectedValuePath="Attribute[id].Value"
                          ScrollViewer.HorizontalScrollBarVisibility="Disabled">
                     <ListBox.GroupStyle>
                         <GroupStyle ContainerStyle="{StaticResource gsGroupStyleTaskGroup}"/>
@@ -71,48 +83,56 @@
                 </ListBox>
             </DockPanel>
             <GridSplitter Width="8" Background="Transparent" Grid.Column="0"/>
-            <DockPanel Grid.Column="1" 
-                       DataContext="{Binding ElementName=LBMetadatadefs, Path=SelectedItem}"
-                       IsEnabled="{Binding ElementName=LBMetadatadefs, Path=SelectedItems.Count, Converter={StaticResource IntegerBooleanGreaterThen0Converter}}">
-                <Grid DockPanel.Dock="Top">
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="1*"/>
-                        <ColumnDefinition Width="1*"/>
-                    </Grid.ColumnDefinitions>
-                    <DockPanel Grid.Column="0">
-                        <StackPanel Orientation="Horizontal" DockPanel.Dock="Top">
-                            <TextBlock Width="100" VerticalAlignment="Center">ID</TextBlock>
-                            <TextBox Width="30" Text="{Binding Attribute[id].Value}"/>
-                        </StackPanel>
-                        <DockPanel DockPanel.Dock="Top">
-                            <TextBlock Width="100" VerticalAlignment="Center">Name</TextBlock>
-                            <local:TextMultiLanguageControl XMD="{Binding}" Languages="de en" TagFilter="Label"/>
-                        </DockPanel>
-                        <ScrollViewer HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Auto">
-                            <StackPanel>
-                                <DockPanel>
-                                    <TextBlock Width="100" VerticalAlignment="Center">Beschreibung</TextBlock>
-                                    <local:TextMultiLanguageControl XMD="{Binding}" Languages="de en" TagFilter="Description" Multiline="True"/>
-                                </DockPanel>
-                                <DockPanel>
-                                    <TextBlock Width="100" VerticalAlignment="Center">Typ</TextBlock>
-                                    <ComboBox ItemsSource="{Binding Source={StaticResource MDCFactory}, Path=MDDefTypes}"
-                                              Name="CBValueType"
-                                              DisplayMemberPath="Value"
-                                              SelectedValuePath="Key"
-                                              SelectedValue="{Binding Attribute[type].Value}"/>
-                                </DockPanel>
-                                <mdcomp:MDContainerControl Name="MDCC" XMDList="{Binding Element[MDDefMetadata]}" CanDefaultEdit="True"/>
+            <Border BorderBrush="LightGray" BorderThickness="2" Grid.Column="1" Padding="3">
+                <DockPanel
+                           DataContext="{Binding ElementName=LBMetadatadefs, Path=SelectedItem}"
+                           IsEnabled="{Binding ElementName=LBMetadatadefs, Path=SelectedItems.Count, Converter={StaticResource IntegerBooleanGreaterThen0Converter}}">
+                    <Grid DockPanel.Dock="Top">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="1*"/>
+                            <ColumnDefinition Width="1*"/>
+                        </Grid.ColumnDefinitions>
+                        <DockPanel Grid.Column="0">
+                            <StackPanel Orientation="Horizontal" DockPanel.Dock="Top">
+                                <TextBlock Width="100" VerticalAlignment="Center">ID</TextBlock>
+                                <TextBox Width="40" Text="{Binding Attribute[id].Value}"/>
                             </StackPanel>
-                        </ScrollViewer>
-                    </DockPanel>
-                    <ScrollViewer Grid.Column="1" Margin="10 0 0 0" HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Auto">
-                        <ContentControl Focusable="False"
-                                        ContentTemplateSelector="{StaticResource DefTypeControlSelector}" 
-                                        Content="{Binding ElementName=CBValueType, Path=SelectedValue}"/>
-                    </ScrollViewer>
-                </Grid>
-            </DockPanel>
+                            <DockPanel DockPanel.Dock="Top">
+                                <TextBlock Width="100" VerticalAlignment="Center">Name</TextBlock>
+                                <local:TextMultiLanguageControl XMD="{Binding}" Languages="de en" TagFilter="Label"/>
+                            </DockPanel>
+                            <ScrollViewer HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Auto">
+                                <StackPanel>
+                                    <DockPanel>
+                                        <TextBlock Width="100" VerticalAlignment="Center">Beschreibung</TextBlock>
+                                        <local:TextMultiLanguageControl XMD="{Binding}" Languages="de en" TagFilter="Description" Multiline="True"/>
+                                    </DockPanel>
+                                    <DockPanel>
+                                        <TextBlock Width="100" VerticalAlignment="Center">Typ</TextBlock>
+                                        <ComboBox ItemsSource="{Binding Source={StaticResource MDCFactory}, Path=MDDefTypes}"
+                                                  Name="CBValueType"
+                                                  DisplayMemberPath="Value"
+                                                  SelectedValuePath="Key"
+                                                  SelectedValue="{Binding Attribute[type].Value}"/>
+                                    </DockPanel>
+                                    <DockPanel>
+                                        <TextBlock Width="100" VerticalAlignment="Center">Typ-Spezifikation</TextBlock>
+                                        <ScrollViewer HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Auto">
+                                            <ContentControl Focusable="False"
+                                                            ContentTemplateSelector="{StaticResource DefTypeControlSelector}" 
+                                                            Content="{Binding ElementName=CBValueType, Path=SelectedValue}"/>
+                                        </ScrollViewer>
+                                    </DockPanel>
+                                </StackPanel>
+                            </ScrollViewer>
+                        </DockPanel>
+                        <DockPanel Grid.Column="1" Margin="15 0 0 0">
+                            <TextBlock DockPanel.Dock="Top">Metadaten der aktuellen Definition:</TextBlock>
+                            <mdcomp:MDContainerControl Name="MDCC" XMDList="{Binding Element[MDDefMetadata]}" CanDefaultEdit="True"/>
+                        </DockPanel>
+                    </Grid>
+                </DockPanel>
+            </Border>
         </Grid>
     </DockPanel>
 </Window>

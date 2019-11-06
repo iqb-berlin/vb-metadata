@@ -67,6 +67,9 @@
       <DependentUpon>MDContainerControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="Converters.vb" />
+    <Compile Include="Dialogs\EditMDListDialog.xaml.vb">
+      <DependentUpon>EditMDListDialog.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Dialogs\EditDefaultMDListDialog.xaml.vb">
       <DependentUpon>EditDefaultMDListDialog.xaml</DependentUpon>
     </Compile>
@@ -117,6 +120,10 @@
       <DependentUpon>TextMultiLanguageEditControl.xaml</DependentUpon>
     </Compile>
     <Page Include="Container\MDContainerControl.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Dialogs\EditMDListDialog.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>

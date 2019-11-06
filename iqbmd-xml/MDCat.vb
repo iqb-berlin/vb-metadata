@@ -53,6 +53,16 @@
         Return myreturn
     End Function
 
+    Public Function IsListDef(id As String) As Boolean
+        Dim myreturn As Boolean = False
+        If MDDefs.ContainsKey(id) Then
+            Dim md As XElement = MDDefs.Item(id)
+            Dim typestr As String = md.@type
+            myreturn = (typestr = "listsingleselect") OrElse (typestr = "listmultiselect")
+        End If
+        Return myreturn
+    End Function
+
     Public Function GetMDObject(ByRef XMD As XElement) As MDObject
         Dim myreturn As MDObject = Nothing
         If XMD IsNot Nothing AndAlso MDDefs.ContainsKey(XMD.@def) Then myreturn = New MDObject(XMD, MDDefs.Item(XMD.@def))

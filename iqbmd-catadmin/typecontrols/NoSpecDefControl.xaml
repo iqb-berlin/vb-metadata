@@ -6,7 +6,6 @@
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
     <StackPanel>
-        <TextBlock HorizontalAlignment="Center" Margin="30">Keine weiteren Parameter für Datentyp</TextBlock>
-        <TextBlock HorizontalAlignment="Center" Margin="30" Text="{Binding}"/>
+        <TextBlock Margin="3" TextWrapping="Wrap" FontStyle="Italic">Keine weiteren Parameter für diesen Datentyp</TextBlock>
     </StackPanel>
 </UserControl>

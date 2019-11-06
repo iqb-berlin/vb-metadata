@@ -100,6 +100,18 @@ Partial Friend NotInheritable Class MySettings
             Me("last_savetheworld") = value
         End Set
     End Property
+    
+    <Global.System.Configuration.UserScopedSettingAttribute(),  _
+     Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
+     Global.System.Configuration.DefaultSettingValueAttribute("")>  _
+    Public Property last_oldcatfilename() As String
+        Get
+            Return CType(Me("last_oldcatfilename"),String)
+        End Get
+        Set
+            Me("last_oldcatfilename") = value
+        End Set
+    End Property
 End Class
 
 Namespace My
