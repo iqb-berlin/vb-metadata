@@ -12,10 +12,10 @@ Imports System.Windows
 ' Review the values of the assembly attributes
 
 <Assembly: AssemblyTitle("iqbmd_components")>
-<Assembly: AssemblyDescription("")>
-<Assembly: AssemblyCompany("")>
+<Assembly: AssemblyDescription("Metadaten-System des IQB: Controls und Dialoge zur Verwendung in anderen Anwendungen")>
+<Assembly: AssemblyCompany("IQB Berlin")>
 <Assembly: AssemblyProduct("iqbmd_components")>
-<Assembly: AssemblyCopyright("IQB @  2019")>
+<Assembly: AssemblyCopyright("IQB @ 2019")>
 <Assembly: AssemblyTrademark("")> 
 <Assembly: ComVisible(false)>
 
@@ -42,7 +42,7 @@ Imports System.Windows
 
 
 'The following GUID is for the ID of the typelib if this project is exposed to COM
-<Assembly: Guid("24be450a-01ab-43a6-a69d-0f29ce93d127")> 
+<Assembly: Guid("24be450a-01ab-43a6-a69d-0f29ce93d127")>
 
 ' Version information for an assembly consists of the following four values:
 '
@@ -55,5 +55,5 @@ Imports System.Windows
 ' by using the '*' as shown below:
 ' <Assembly: AssemblyVersion("1.0.*")>
 
-<Assembly: AssemblyVersion("1.0.0.0")>
-<Assembly: AssemblyFileVersion("1.0.0.0")>
+<Assembly: AssemblyVersion("1.2.0.0")>
+<Assembly: AssemblyFileVersion("1.2.0.0")>

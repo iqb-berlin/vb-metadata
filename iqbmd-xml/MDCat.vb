@@ -70,7 +70,7 @@
         Return myreturn
     End Function
 
-    Public Function GetMDList(Optional LanguageKey As String = "de") As List(Of MDInfo)
+    Public Function GetMDList(Optional MDFilter As MDFilter = Nothing, Optional LanguageKey As String = "de") As List(Of MDInfo)
         Dim myreturn As New List(Of MDInfo)
         If XMDCat IsNot Nothing Then
             Dim XLabel As XElement = (From entry In XMDCat.Root.<Label> Where entry.Attribute(MDCFactory.LanguageNamespace + "lang").Value = LanguageKey Select entry).FirstOrDefault
@@ -78,15 +78,17 @@
             Dim CatLabel As String = XLabel.Value
             Dim CatId As String = XMDCat.Root.@id
             For Each md As KeyValuePair(Of String, XElement) In MDDefs
-                Dim myMDType As String = "unbekannter Typ"
-                Try
-                    myMDType = MDCFactory.MDDefTypes.Item(md.Value.@type)
-                Catch ex As Exception
-                    myMDType = "unbekannter Typ '" + md.Value.@type + "'"
-                End Try
-                myreturn.Add(New MDInfo With {
-                             .CatId = CatId, .CatLabel = CatLabel, .id = md.Key, .typeLabel = myMDType,
-                             .Label = GetMDDefLabel(md.Key, LanguageKey), .Description = GetMDDefDescription(md.Key, LanguageKey)})
+                If MDFilter Is Nothing OrElse MDFilter.IsMatch(md.Value.<MDDefMetadata>.FirstOrDefault) Then
+                    Dim myMDType As String = "unbekannter Typ"
+                    Try
+                        myMDType = MDCFactory.MDDefTypes.Item(md.Value.@type)
+                    Catch ex As Exception
+                        myMDType = "unbekannter Typ '" + md.Value.@type + "'"
+                    End Try
+                    myreturn.Add(New MDInfo With {
+                                 .CatId = CatId, .CatLabel = CatLabel, .id = md.Key, .typeLabel = myMDType,
+                                 .Label = GetMDDefLabel(md.Key, LanguageKey), .Description = GetMDDefDescription(md.Key, LanguageKey)})
+                End If
             Next
         End If
 

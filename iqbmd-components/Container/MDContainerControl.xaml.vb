@@ -48,13 +48,13 @@ Public Class MDContainerControl
         End Set
     End Property
 
-    Public Shared ReadOnly MDFiltersProperty As DependencyProperty = DependencyProperty.Register("MDFilters", GetType(List(Of MDFilter)), GetType(MDContainerControl), New FrameworkPropertyMetadata() With {.BindsTwoWayByDefault = False})
-    Public Property MDFilters As List(Of MDFilter)
+    Public Shared ReadOnly MDFilterProperty As DependencyProperty = DependencyProperty.Register("MDFilter", GetType(MDFilter), GetType(MDContainerControl), New FrameworkPropertyMetadata() With {.BindsTwoWayByDefault = False})
+    Public Property MDFilter As MDFilter
         Get
-            Return GetValue(MDFiltersProperty)
+            Return GetValue(MDFilterProperty)
         End Get
-        Set(ByVal value As List(Of MDFilter))
-            SetValue(MDFiltersProperty, value)
+        Set(ByVal value As MDFilter)
+            SetValue(MDFilterProperty, value)
         End Set
     End Property
 
@@ -86,7 +86,7 @@ Public Class MDContainerControl
             DialogFactory.MsgError(DialogFactory.GetParentWindow(Me), "Neue Eigenschaft", "Es sind keine zulässigen Kataloge zugewiesen.")
         Else
             Dim HabSchonMDList As List(Of String) = (From xs As XElement In XMDList.Elements Select xs.@cat + "##" + xs.@def).ToList
-            Dim AvailableMDList As List(Of XElement) = (From MDI As MDInfo In MDCFactory.GetMDList(MDCatList, MDFilters)
+            Dim AvailableMDList As List(Of XElement) = (From MDI As MDInfo In MDCFactory.GetMDList(MDCatList, MDFilter)
                                                         Let MDKey As String = MDI.CatId + "##" + MDI.id,
                                                             XMD As XElement = <p key=<%= MDKey %> cat=<%= MDI.CatLabel %>><%= MDI.Label %></p>
                                                         Where Not HabSchonMDList.Contains(MDKey)
@@ -143,7 +143,7 @@ Public Class MDContainerControl
 
     Private Sub HandleEditDefaultExecuted(sender As Object, e As ExecutedRoutedEventArgs)
         Dim myDlg As New EditDefaultMDListDialog With {.Owner = iqb.lib.components.DialogFactory.GetParentWindow(Me),
-            .XDefaultMDList = Me.XDefaultMDList, .MDCatList = Me.MDCatList, .MDFilters = Me.MDFilters}
+            .XDefaultMDList = Me.XDefaultMDList, .MDCatList = Me.MDCatList, .MDFilter = Me.MDFilter}
         If myDlg.ShowDialog Then MDLC.Update()
     End Sub
 End Class

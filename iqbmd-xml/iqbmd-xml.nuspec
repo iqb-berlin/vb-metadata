@@ -1,0 +1,20 @@
+<?xml version="1.0"?>
+<package >
+  <metadata>
+    <id>$id$</id>
+    <version>$version$</version>
+    <title>$title$</title>
+    <authors>$author$</authors>
+    <owners>$author$</owners>
+    <license type="expression">MIT</license>
+    <repository type="git" url="https://github.com/iqb-vbnet/iqbmd.git" branch="dev"/>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>$description$</description>
+    <releaseNotes>Filter applied for cat search</releaseNotes>
+    <copyright>Copyright 2019</copyright>
+    <tags>IQB MDR MDC</tags>
+    <dependencies>
+      <dependency id="Newtonsoft.Json" version="12.0" />
+    </dependencies>
+    </metadata>
+</package>

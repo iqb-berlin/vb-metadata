@@ -3,7 +3,7 @@ Public Class EditDefaultMDListDialog
 
     Public XDefaultMDList As XElement
     Public MDCatList As IEnumerable(Of String)
-    Public MDFilters As List(Of MDFilter)
+    Public MDFilter As MDFilter
 
     Private myCatMDList As List(Of MDInfo)
     Private Sub Me_Loaded() Handles Me.Loaded
@@ -17,7 +17,7 @@ Public Class EditDefaultMDListDialog
         End If
 
 
-        myCatMDList = MDCFactory.GetMDList(MDCatList, MDFilters)
+        myCatMDList = MDCFactory.GetMDList(MDCatList, MDFilter)
         'Dim cv As CollectionView = CollectionViewSource.GetDefaultView(LBCatMDDefList.ItemsSource)
         'If cv IsNot Nothing Then
         '    cv.GroupDescriptions.Add(New PropertyGroupDescription("CatLabel"))

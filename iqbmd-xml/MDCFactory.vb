@@ -121,12 +121,12 @@ Public Class MDCFactory
         Return myreturn
     End Function
 
-    Public Shared Function GetMDList(CatIdList As List(Of String), Optional MDFilters As List(Of MDFilter) = Nothing) As List(Of MDInfo)
+    Public Shared Function GetMDList(CatIdList As List(Of String), Optional MDFilter As MDFilter = Nothing) As List(Of MDInfo)
         Dim myreturn As New List(Of MDInfo)
         For Each catId As String In CatIdList
             Dim myCat As MDCat = GetMDC(catId)
             If myCat IsNot Nothing Then
-                For Each mdi As MDInfo In myCat.GetMDList()
+                For Each mdi As MDInfo In myCat.GetMDList(MDFilter)
                     mdi.CatId = catId
                     myreturn.Add(mdi)
                 Next

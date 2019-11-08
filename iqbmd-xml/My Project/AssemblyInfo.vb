@@ -9,9 +9,9 @@ Imports System.Runtime.InteropServices
 ' Review the values of the assembly attributes
 
 <Assembly: AssemblyTitle("iqbmd-xml")>
-<Assembly: AssemblyDescription("")>
+<Assembly: AssemblyDescription("Metadaten-System des IQB: Basis-Klassendefintionen")>
 <Assembly: AssemblyCompany("IQB Berlin")>
-<Assembly: AssemblyProduct("iqbmd-xml")>
+<Assembly: AssemblyProduct("iqbmd_xml")>
 <Assembly: AssemblyCopyright("IQB © 2019")>
 <Assembly: AssemblyTrademark("")>
 
@@ -31,5 +31,5 @@ Imports System.Runtime.InteropServices
 ' by using the '*' as shown below:
 ' <Assembly: AssemblyVersion("1.0.*")>
 
-<Assembly: AssemblyVersion("1.0.0.0")>
-<Assembly: AssemblyFileVersion("1.0.0.0")>
+<Assembly: AssemblyVersion("1.1.0.0")>
+<Assembly: AssemblyFileVersion("1.1.0.0")>

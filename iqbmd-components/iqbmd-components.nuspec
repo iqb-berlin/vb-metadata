@@ -1,0 +1,21 @@
+<?xml version="1.0"?>
+<package >
+  <metadata>
+    <id>$id$</id>
+    <version>$version$</version>
+    <title>$title$</title>
+    <authors>$author$</authors>
+    <owners>$author$</owners>
+    <license type="expression">MIT</license>
+    <repository type="git" url="https://github.com/iqb-vbnet/iqbmd.git" branch="dev"/>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>$description$</description>
+    <releaseNotes>Bugfix Filter, new converter for md label</releaseNotes>
+    <copyright>Copyright 2019</copyright>
+    <tags>IQB MDR MDC</tags>
+    <dependencies>
+      <dependency id="iqblib-components" version="1.0" />
+      <dependency id="iqbmd-xml" version="1.1" />
+    </dependencies>
+  </metadata>
+</package>

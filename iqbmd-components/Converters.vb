@@ -144,6 +144,22 @@ Public Class XLanguageAttributePolygonPointsConverter
     End Function
 End Class
 
+Public Class MDKeyLabelConverter
+    Implements IValueConverter
+
+    Public Function Convert(ByVal value As Object, ByVal targetType As System.Type, ByVal parameter As Object, ByVal culture As Globalization.CultureInfo) As Object Implements System.Windows.Data.IValueConverter.Convert
+        If Not String.IsNullOrEmpty(value) AndAlso TypeOf value Is String Then
+            Dim mddefsplits As String() = CType(value, String).Split({"##"}, StringSplitOptions.RemoveEmptyEntries)
+            If mddefsplits.Count = 2 Then Return MDCFactory.GetMDLabel(mddefsplits(0), mddefsplits(1))
+        End If
+        Return Nothing
+    End Function
+
+    Public Function ConvertBack(ByVal value As Object, ByVal targetType As System.Type, ByVal parameter As Object, ByVal culture As Globalization.CultureInfo) As Object Implements System.Windows.Data.IValueConverter.ConvertBack
+        Throw New NotImplementedException("ConvertBack in MDKeyLabelConverter")
+    End Function
+End Class
+
 '####################################################################
 Public Class DateStringDateConverter
     Implements IValueConverter
