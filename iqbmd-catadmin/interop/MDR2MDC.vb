@@ -52,6 +52,16 @@
         Dim ScopeTranslate As New Dictionary(Of String, XElement) From {
                     {"sj.case", <MD cat="DOI:10.5159/IQB_MDR_Core_v1" def="2">7</MD>},
                     {"sj.contact", <MD cat="DOI:10.5159/IQB_MDR_Core_v1" def="2">10</MD>},
+                    {"sj.study", <MD cat="DOI:10.5159/IQB_MDR_Core_v1" def="2">14</MD>},
+                    {"sj.applicationcontent", <MD cat="DOI:10.5159/IQB_MDR_Core_v1" def="2">15</MD>},
+                    {"sj.application", <MD cat="DOI:10.5159/IQB_MDR_Core_v1" def="2">1</MD>},
+                    {"sj.applicant", <MD cat="DOI:10.5159/IQB_MDR_Core_v1" def="2">2</MD>},
+                    {"sj.process", <MD cat="DOI:10.5159/IQB_MDR_Core_v1" def="2">3</MD>},
+                    {"sj.dataset", <MD cat="DOI:10.5159/IQB_MDR_Core_v1" def="2">5</MD>},
+                    {"sj.survey", <MD cat="DOI:10.5159/IQB_MDR_Core_v1" def="2">6</MD>},
+                    {"sj.release", <MD cat="DOI:10.5159/IQB_MDR_Core_v1" def="2">8</MD>},
+                    {"sj.instrument", <MD cat="DOI:10.5159/IQB_MDR_Core_v1" def="2">9</MD>},
+                    {"sj.project", <MD cat="DOI:10.5159/IQB_MDR_Core_v1" def="2">13</MD>},
                     {"sj.person", <MD cat="DOI:10.5159/IQB_MDR_Core_v1" def="2">12</MD>}
             }
 
@@ -59,6 +69,7 @@
         If XProps IsNot Nothing Then
             For Each XProp As XElement In XProps.<Property>
                 Dim XMD As XElement = <MDDef/>
+                Debug.Print(XProp.@key)
                 XMD.@id = XProp.@key.Substring(1)
                 XMD.@type = XProp.@type
                 For Each xe As XElement In XProp.<Metadata>.First.Elements
@@ -67,6 +78,7 @@
 
                 Dim XMDDefMDs As XElement = <MDDefMetadata/>
                 For Each s As String In XProp.<ScopeRef>.First.Value.Split({" "}, StringSplitOptions.RemoveEmptyEntries)
+                    If Not ScopeTranslate.ContainsKey(s) Then Throw New ArgumentException("MDR2MDC.TransformOld: Scope '" + s + "'nicht bekannt.")
                     Dim XMDMD As XElement = ScopeTranslate.Item(s)
                     Dim xhabschon As XElement = (From xe As XElement In XMDDefMDs.Elements Where xe.@cat = XMDMD.@cat AndAlso xe.@def = XMDMD.@def).FirstOrDefault
                     If xhabschon Is Nothing Then

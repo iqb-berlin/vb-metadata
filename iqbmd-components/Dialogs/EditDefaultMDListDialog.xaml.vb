@@ -2,7 +2,7 @@
 Public Class EditDefaultMDListDialog
 
     Public XDefaultMDList As XElement
-    Public MDCatList As IEnumerable(Of String)
+    Public MDCatList As List(Of String)
     Public MDFilter As MDFilter
 
     Private myCatMDList As List(Of MDInfo)

@@ -38,12 +38,12 @@ Public Class MDContainerControl
         End Set
     End Property
 
-    Public Shared ReadOnly MDCatListProperty As DependencyProperty = DependencyProperty.Register("MDCatList", GetType(IEnumerable(Of String)), GetType(MDContainerControl), New FrameworkPropertyMetadata() With {.BindsTwoWayByDefault = False})
-    Public Property MDCatList As IEnumerable(Of String)
+    Public Shared ReadOnly MDCatListProperty As DependencyProperty = DependencyProperty.Register("MDCatList", GetType(List(Of String)), GetType(MDContainerControl), New FrameworkPropertyMetadata() With {.BindsTwoWayByDefault = False})
+    Public Property MDCatList As List(Of String)
         Get
             Return GetValue(MDCatListProperty)
         End Get
-        Set(ByVal value As IEnumerable(Of String))
+        Set(ByVal value As List(Of String))
             SetValue(MDCatListProperty, value)
         End Set
     End Property
@@ -145,5 +145,15 @@ Public Class MDContainerControl
         Dim myDlg As New EditDefaultMDListDialog With {.Owner = iqb.lib.components.DialogFactory.GetParentWindow(Me),
             .XDefaultMDList = Me.XDefaultMDList, .MDCatList = Me.MDCatList, .MDFilter = Me.MDFilter}
         If myDlg.ShowDialog Then MDLC.Update()
+    End Sub
+
+    Public Sub Update()
+        Dim be As BindingExpression = Me.MDLC.GetBindingExpression(MDListControl.XMDListProperty)
+        If be IsNot Nothing Then be.UpdateTarget()
+        be = Me.MDLC.GetBindingExpression(MDListControl.XDefaultMDListProperty)
+        If be IsNot Nothing Then be.UpdateTarget()
+        be = Me.MDLC.GetBindingExpression(MDListControl.IsReadOnlyProperty)
+        If be IsNot Nothing Then be.UpdateTarget()
+        MDLC.Update()
     End Sub
 End Class

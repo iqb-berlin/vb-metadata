@@ -10,7 +10,7 @@
     <repository type="git" url="https://github.com/iqb-vbnet/iqbmd.git" branch="dev"/>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>$description$</description>
-    <releaseNotes>Bugfix Filter, new converter for md label</releaseNotes>
+    <releaseNotes>added update() to mdcontainercontrol</releaseNotes>
     <copyright>Copyright 2019</copyright>
     <tags>IQB MDR MDC</tags>
     <dependencies>

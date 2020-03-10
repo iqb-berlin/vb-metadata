@@ -6,7 +6,7 @@
         TBInfo.Text = iqb.md.components.LinkEditControl.DefaultFolder
         Me.AddHandler(iqb.md.components.MDListControl.MDChangedEvent, New RoutedEventHandler(AddressOf MDChangedEventHandler))
         Me.MDLC.MDCatList = New List(Of String) From {"DOI:10.5159/IQB_MDR_Core_v1", "file:\\huiqb39c.user.hu-berlin.de\IQBProjekte\MDC\GitHub\mdc-test.xml"}
-        Me.MDLC.MDFilters = New List(Of iqb.md.xml.MDFilter)
+        Me.MDLC.MDFilter = Nothing
     End Sub
 
     Private Sub HandleDefaultFolderChanged()
