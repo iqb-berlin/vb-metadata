@@ -114,6 +114,9 @@
       <DependentUpon>TextMultiLanguageControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="typecontrols\Converters.vb" />
+    <Compile Include="typecontrols\TextMultiLangDefControl.xaml.vb">
+      <DependentUpon>TextMultiLangDefControl.xaml</DependentUpon>
+    </Compile>
     <Compile Include="typecontrols\ListDefControl.xaml.vb">
       <DependentUpon>ListDefControl.xaml</DependentUpon>
     </Compile>
@@ -152,6 +155,10 @@
       <SubType>Code</SubType>
     </Compile>
     <Page Include="TextMultiLanguageControl.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="typecontrols\TextMultiLangDefControl.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>

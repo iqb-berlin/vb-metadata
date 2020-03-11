@@ -307,7 +307,30 @@ Class MainWindow
         End If
         If Not String.IsNullOrEmpty(XDocMCatFilename) Then
             Try
-                XDocMCat.Save(XDocMCatFilename)
+                Dim XDocToSave As New XDocument(XDocMCat)
+                'remove empty TypeSpecs
+                For Each XMD As XElement In XDocToSave.Root.<MDDef>
+                    Dim XTypeSpec As XElement = XMD.<TypeSpec>.FirstOrDefault
+                    If XTypeSpec IsNot Nothing Then
+                        Dim IsEmpty As Boolean = True
+                        Dim XeToRemove As New List(Of XElement)
+                        For Each XSpec As XElement In XTypeSpec.Elements
+                            If String.IsNullOrEmpty(XSpec.Value) Then
+                                XeToRemove.Add(XSpec)
+                            Else
+                                IsEmpty = False
+                            End If
+                        Next
+                        If IsEmpty Then
+                            XTypeSpec.Remove()
+                        Else
+                            For Each xe As XElement In XeToRemove
+                                xe.Remove()
+                            Next
+                        End If
+                    End If
+                Next
+                XDocToSave.Save(XDocMCatFilename)
                 XDocMCatChanged = False
             Catch ex As Exception
                 DialogFactory.MsgError(Me, "Speichern Metadatenkatalog '" + IO.Path.GetFileName(XDocMCatFilename) + "'", "Konnte nicht speichern:" + vbNewLine + ex.Message)

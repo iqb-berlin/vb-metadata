@@ -23,13 +23,13 @@ Public Class DefTypeControlSelector
                 Case "decimal" : myControlType = DefTypeControlSelector.GetControl("DecimalDefControl")
                 Case "listsingleselect",
                      "listmultiselect" : myControlType = DefTypeControlSelector.GetControl("ListDefControl")
+                Case "textmultilang" : myControlType = DefTypeControlSelector.GetControl("TextMultiLangDefControl")
                 Case "boolean",
                      "folderlink",
                      "filelink",
                      "folderlink",
                      "textde",
-                     "date",
-                     "textmultilang" : myControlType = DefTypeControlSelector.GetControl("NoSpecDefControl")
+                     "date" : myControlType = DefTypeControlSelector.GetControl("NoSpecDefControl")
                 Case Else
                     myControlType = DefTypeControlSelector.GetControl("UnknownTypeDefControl")
             End Select
