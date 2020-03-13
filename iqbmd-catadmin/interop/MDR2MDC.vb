@@ -68,42 +68,60 @@
         Dim XProps As XElement = XOldCat.Root.<Properties>.FirstOrDefault
         If XProps IsNot Nothing Then
             For Each XProp As XElement In XProps.<Property>
-                Dim XMD As XElement = <MDDef/>
-                Debug.Print(XProp.@key)
-                XMD.@id = XProp.@key.Substring(1)
-                XMD.@type = XProp.@type
-                For Each xe As XElement In XProp.<Metadata>.First.Elements
-                    XMD.Add(New XElement(xe))
-                Next
-
-                Dim XMDDefMDs As XElement = <MDDefMetadata/>
-                For Each s As String In XProp.<ScopeRef>.First.Value.Split({" "}, StringSplitOptions.RemoveEmptyEntries)
-                    If Not ScopeTranslate.ContainsKey(s) Then Throw New ArgumentException("MDR2MDC.TransformOld: Scope '" + s + "'nicht bekannt.")
-                    Dim XMDMD As XElement = ScopeTranslate.Item(s)
-                    Dim xhabschon As XElement = (From xe As XElement In XMDDefMDs.Elements Where xe.@cat = XMDMD.@cat AndAlso xe.@def = XMDMD.@def).FirstOrDefault
-                    If xhabschon Is Nothing Then
-                        XMDDefMDs.Add(New XElement(XMDMD))
+                If XProp.@public = "True" AndAlso XProp.@deprecated = "False" Then
+                    Dim XMD As XElement = <MDDef/>
+                    Dim XTypeSpec As XElement = Nothing
+                    Debug.Print(XProp.@key)
+                    XMD.@id = XProp.@key.Substring(1)
+                    If XProp.@type = "second" Then
+                        XMD.@type = "integer"
+                        XTypeSpec = <TypeSpec>
+                                        <Min>0</Min>
+                                        <Seconds>True</Seconds>
+                                    </TypeSpec>
                     Else
-                        xhabschon.Value = xhabschon.Value + " " + XMDMD.Value
+                        XMD.@type = XProp.@type
+                        If XMD.@type = "listsingleselect" OrElse XMD.@type = "listmultiselect" Then
+                            XTypeSpec = <TypeSpec>
+                                            <ListControl>list</ListControl>
+                                        </TypeSpec>
+                        End If
                     End If
-                Next
-                XMD.Add(XMDDefMDs)
 
-                Dim XMDValues As XElement = XProp.<Values>.FirstOrDefault
-                If XMDValues IsNot Nothing Then
-                    For Each xv As XElement In XMDValues.<Value>
-                        Dim XMDV As XElement = <Value/>
-                        XMDV.@id = xv.@key.Substring(2)
-                        For Each xe As XElement In xv.<Metadata>.First.Elements
-                            XMDV.Add(New XElement(xe))
-                        Next
-                        XMD.Add(XMDV)
+                    For Each xe As XElement In XProp.<Metadata>.First.Elements
+                        XMD.Add(New XElement(xe))
                     Next
+
+                    Dim XMDDefMDs As XElement = <MDDefMetadata/>
+                    For Each s As String In XProp.<ScopeRef>.First.Value.Split({" "}, StringSplitOptions.RemoveEmptyEntries)
+                        If Not ScopeTranslate.ContainsKey(s) Then Throw New ArgumentException("MDR2MDC.TransformOld: Scope '" + s + "'nicht bekannt.")
+                        Dim XMDMD As XElement = ScopeTranslate.Item(s)
+                        Dim xhabschon As XElement = (From xe As XElement In XMDDefMDs.Elements Where xe.@cat = XMDMD.@cat AndAlso xe.@def = XMDMD.@def).FirstOrDefault
+                        If xhabschon Is Nothing Then
+                            XMDDefMDs.Add(New XElement(XMDMD))
+                        Else
+                            xhabschon.Value = xhabschon.Value + " " + XMDMD.Value
+                        End If
+                    Next
+                    XMD.Add(XMDDefMDs)
+                    If XTypeSpec IsNot Nothing Then XMD.Add(XTypeSpec)
+
+                    Dim XMDValues As XElement = XProp.<Values>.FirstOrDefault
+                    If XMDValues IsNot Nothing Then
+                        For Each xv As XElement In XMDValues.<Value>
+                            Dim XMDV As XElement = <Value/>
+                            XMDV.@id = xv.@key.Substring(2)
+                            For Each xe As XElement In xv.<Metadata>.First.Elements
+                                XMDV.Add(New XElement(xe))
+                            Next
+                            XMD.Add(XMDV)
+                        Next
+                    End If
+                    myreturn.Root.Add(XMD)
                 End If
-                myreturn.Root.Add(XMD)
             Next
         End If
 
-    Return myreturn
+        Return myreturn
     End Function
 End Class

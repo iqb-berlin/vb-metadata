@@ -45,7 +45,11 @@
                     <TextBlock Width="100" VerticalAlignment="Center">Version-History</TextBlock>
                     <TextBox Name="TBVersionHistory"/>
                 </DockPanel>
-
+                <DockPanel>
+                    <TextBlock Width="100" VerticalAlignment="Center">Standard MD</TextBlock>
+                    <CheckBox Margin="2" Name="ChBMDCoreSubject" DockPanel.Dock="Top">Core - Subject/Inhaltlicher Bezug</CheckBox>
+                    <CheckBox Margin="2" Name="ChBMDCoreScope">Core - Scope/Gültigkeitsbereich</CheckBox>
+                </DockPanel>
             </StackPanel>
         </ScrollViewer>
     </DockPanel>

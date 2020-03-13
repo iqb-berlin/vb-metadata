@@ -329,6 +329,14 @@ Class MainWindow
                             Next
                         End If
                     End If
+                    Dim XDescriptions As List(Of XElement) = XMD.<Description>.ToList
+                    For Each xd As XElement In XDescriptions
+                        If String.IsNullOrEmpty(xd.Value) Then xd.Remove()
+                    Next
+                    Dim XLabels As List(Of XElement) = XMD.<Label>.ToList
+                    For Each xd As XElement In XLabels
+                        If String.IsNullOrEmpty(xd.Value) Then xd.Remove()
+                    Next
                 Next
                 XDocToSave.Save(XDocMCatFilename)
                 XDocMCatChanged = False
@@ -396,7 +404,9 @@ Class MainWindow
 
     Private Sub HandleEditCatMetadataExecuted(ByVal sender As Object, ByVal e As ExecutedRoutedEventArgs)
         Dim myDlg As New EditCatCoreDataDialog(Me.XDocMCat) With {.Owner = Me, .Title = AppCommands.EditCatData.Text}
-        myDlg.ShowDialog()
+        If myDlg.ShowDialog() Then
+
+        End If
     End Sub
 
     Private Sub HandleEditMDCoreCatsExecuted(ByVal sender As Object, ByVal e As ExecutedRoutedEventArgs)
