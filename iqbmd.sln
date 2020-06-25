@@ -9,6 +9,12 @@ Project("{F184B08F-C81C-45F6-A57F-5ABD9991F28F}") = "iqbmd-components", "iqbmd-c
 EndProject
 Project("{F184B08F-C81C-45F6-A57F-5ABD9991F28F}") = "iqbmd-xml", "iqbmd-xml\iqbmd-xml.vbproj", "{08EF84A8-1898-408F-83B5-23DDDDAAB618}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{526AF8E6-F168-40F5-BF37-691C555BD093}"
+	ProjectSection(SolutionItems) = preProject
+		LICENSE = LICENSE
+		README.md = README.md
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
