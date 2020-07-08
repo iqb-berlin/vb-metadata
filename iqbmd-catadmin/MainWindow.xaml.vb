@@ -83,13 +83,11 @@ Class MainWindow
         CommandBindings.Add(New CommandBinding(AppCommands.EditCatData, AddressOf HandleEditCatMetadataExecuted, AddressOf HandleCatLoadedCanExecute))
         CommandBindings.Add(New CommandBinding(AppCommands.SaveAs, AddressOf HandleSaveAsExecuted, AddressOf HandleCatLoadedCanExecute))
         CommandBindings.Add(New CommandBinding(IQBCommands.ReloadObject, AddressOf HandleReloadExecuted))
-        CommandBindings.Add(New CommandBinding(AppCommands.OpenWebCat, AddressOf HandleOpenWebCatExecuted))
         CommandBindings.Add(New CommandBinding(AppCommands.EditMDCoreCats, AddressOf HandleEditMDCoreCatsExecuted))
         CommandBindings.Add(New CommandBinding(ApplicationCommands.[New], AddressOf HandleAddMDDefExecuted, AddressOf HandleCatLoadedCanExecute))
         CommandBindings.Add(New CommandBinding(ApplicationCommands.Delete, AddressOf HandleDeleteMDDefExecuted, AddressOf HandleDeleteMDDefCanExecute))
         CommandBindings.Add(New CommandBinding(IQBCommands.Filter, AddressOf HandleFilterExecuted))
         CommandBindings.Add(New CommandBinding(IQBCommands.FilterRemove, AddressOf HandleFilterRemoveExecuted, AddressOf HandleFilterRemoveCanExecuted))
-        CommandBindings.Add(New CommandBinding(AppCommands.NewCatalogFromOld, AddressOf HandleNewCatalogFromOldExecuted))
 
         'CommandBindings.Add(New CommandBinding(AppCommands.TestMDControls, AddressOf HandleTestMDControlsExecuted))
         If iqb.lib.windows.ADFactory.GetMyName() = "mechtelm" Then CommandBindings.Add(New CommandBinding(AppCommands.SaveTheWorld, AddressOf HandleSaveTheWorldExecuted))
@@ -244,38 +242,100 @@ Class MainWindow
             UpdateMDDefControls()
         End If
     End Sub
-
     Private Sub HandleOpenExecuted(ByVal sender As Object, ByVal e As ExecutedRoutedEventArgs)
-        Dim fname As String = ""
-        Dim fdir As String = ""
-        If Not String.IsNullOrEmpty(My.Settings.lastfile_mdcat) Then
-            fname = IO.Path.GetFileName(My.Settings.lastfile_mdcat)
-            fdir = IO.Path.GetDirectoryName(My.Settings.lastfile_mdcat)
+        Dim mbresult As MessageBoxResult = MessageBoxResult.OK
+        If XDocMCatChanged Then
+            mbresult = DialogFactory.YesNoCancel(Me, My.Application.Info.AssemblyName, "Der Katalog wurde geändert. Soll er vor dem Schließen gespeichert werden?")
+            If mbresult = MessageBoxResult.OK Then
+                ApplicationCommands.Save.Execute(Nothing, Nothing)
+            End If
         End If
-        Dim filepicker As New Microsoft.Win32.OpenFileDialog With {.FileName = fname, .Filter = "XML-Dateien|*.xml", .InitialDirectory = fdir,
-                                                                           .DefaultExt = "Xml", .Title = "MD-Katalog öffnen"}
-        If filepicker.ShowDialog Then
-            My.Settings.lastfile_mdcat = filepicker.FileName
-            My.Settings.Save()
+        If mbresult <> MessageBoxResult.Cancel Then
+            Dim myDlg As New OpenCatDialog With {.Owner = Me}
+            If myDlg.ShowDialog() Then
+                Dim selectionConfig As Uri = myDlg.selectedUri
+                If selectionConfig.type = "fs2020" Then
+                    Try
+                        If XDocMCat IsNot Nothing Then
+                            RemoveHandler XDocMCat.Root.Changed, AddressOf Notify_XDocMCatChanged
+                        End If
+                        XDocMCat = XDocument.Load(selectionConfig.ref)
+                        AddHandler XDocMCat.Root.Changed, AddressOf Notify_XDocMCatChanged
+                        XDocMCatChanged = False
+                        Dim fp As String = IO.Path.GetDirectoryName(selectionConfig.ref)
+                        If iqb.lib.windows.ADFactory.canWriteToFolder(fp) Then
+                            XDocMCatFilename = selectionConfig.ref
+                        Else
+                            XDocMCatFilename = Nothing
+                        End If
+                        Me.Title = My.Application.Info.AssemblyName + " - " + IO.Path.GetFileName(selectionConfig.ref)
+                        UpdateMDDefControls()
+                    Catch ex As Exception
+                        DialogFactory.MsgError(Me, "MD-Katalog öffnen", "Konnte Datei nicht öffnen:" + vbNewLine + ex.Message)
+                    End Try
+                ElseIf selectionConfig.type = "doi" OrElse selectionConfig.type = "http" Then
+                    Dim WebCatAddr As String = Nothing
+                    Dim newAppTitle As String = selectionConfig.label
+                    If selectionConfig.type = "doi" Then
+                        Using client As New Net.WebClient()
+                            Try
+                                Dim responseString As String = client.DownloadString("https://doi.org/api/handles/" + selectionConfig.ref)
+                                Dim responseObject As Linq.JObject = JsonConvert.DeserializeObject(responseString)
+                                For Each o As Linq.JObject In From i In responseObject("values")
+                                    If o("type") = "URL" Then
+                                        WebCatAddr = o("data")("value")
+                                        Exit For
+                                    End If
+                                Next
+                                newAppTitle = newAppTitle + WebCatAddr + " (" + selectionConfig.ref + ")"
+                            Catch ex As Exception
+                                WebCatAddr = Nothing
+                                DialogFactory.MsgError(Me, "MD-Katalog öffnen", "Konnte DOI nicht auflösen:" + vbNewLine + ex.Message)
+                            End Try
+                        End Using
+                    Else
+                        WebCatAddr = selectionConfig.ref
+                    End If
+                    If Not String.IsNullOrEmpty(WebCatAddr) Then
+                        Try
+                            If XDocMCat IsNot Nothing Then
+                                RemoveHandler XDocMCat.Root.Changed, AddressOf Notify_XDocMCatChanged
+                            End If
+                            Using client As New Net.WebClient()
+                                Using mstream As New IO.MemoryStream(client.DownloadData(WebCatAddr))
+                                    Using xmlR As System.Xml.XmlReader = System.Xml.XmlReader.Create(mstream)
+                                        XDocMCat = XDocument.Load(xmlR)
+                                    End Using
+                                End Using
+                            End Using
+                            AddHandler XDocMCat.Root.Changed, AddressOf Notify_XDocMCatChanged
+                            XDocMCatChanged = False
+                            XDocMCatFilename = Nothing
+                            Me.Title = newAppTitle
+                            UpdateMDDefControls()
+                        Catch ex As Exception
+                            DialogFactory.MsgError(Me, "MD-Katalog öffnen", "Konnte Datei nicht öffnen:" + vbNewLine + ex.Message)
+                        End Try
+                    End If
+                ElseIf selectionConfig.type = "fs2016" Then
+                    Try
+                        XDocMCat = MDR2MDC.TransformOld(selectionConfig.ref)
 
-            Try
-                If XDocMCat IsNot Nothing Then
-                    RemoveHandler XDocMCat.Root.Changed, AddressOf Notify_XDocMCatChanged
+                        If XDocMCat IsNot Nothing Then
+                            RemoveHandler XDocMCat.Root.Changed, AddressOf Notify_XDocMCatChanged
+                        End If
+
+                        AddHandler XDocMCat.Root.Changed, AddressOf Notify_XDocMCatChanged
+                        XDocMCatChanged = False
+                        XDocMCatFilename = Nothing
+                        Me.Title = My.Application.Info.AssemblyName + " - [neu von alt]"
+                        UpdateMDDefControls()
+                    Catch ex As Exception
+                        DialogFactory.MsgError(Me, "MD-Katalog öffnen", "Konnte Datei nicht öffnen:" + vbNewLine + ex.Message)
+                    End Try
+
                 End If
-                XDocMCat = XDocument.Load(filepicker.FileName)
-                AddHandler XDocMCat.Root.Changed, AddressOf Notify_XDocMCatChanged
-                XDocMCatChanged = False
-                Dim fp As String = IO.Path.GetDirectoryName(filepicker.FileName)
-                If iqb.lib.windows.ADFactory.canWriteToFolder(fp) Then
-                    XDocMCatFilename = filepicker.FileName
-                Else
-                    XDocMCatFilename = Nothing
-                End If
-                Me.Title = My.Application.Info.AssemblyName + " - " + IO.Path.GetFileName(XDocMCatFilename)
-                UpdateMDDefControls()
-            Catch ex As Exception
-                DialogFactory.MsgError(Me, "MD-Katalog öffnen", "Konnte Datei nicht öffnen:" + vbNewLine + ex.Message)
-            End Try
+            End If
         End If
     End Sub
 
@@ -421,73 +481,6 @@ Class MainWindow
         If Not String.IsNullOrEmpty(myCoreCatsStrNew) Then MDCoreCats = myCoreCatsStrNew.Split({vbCrLf}, StringSplitOptions.RemoveEmptyEntries).ToList
     End Sub
 
-    Private Sub HandleOpenWebCatExecuted(ByVal sender As Object, ByVal e As ExecutedRoutedEventArgs)
-        Dim mbresult As MessageBoxResult = MessageBoxResult.OK
-        If XDocMCatChanged Then
-            mbresult = DialogFactory.YesNoCancel(Me, My.Application.Info.AssemblyName, "Der Katalog wurde geändert. Soll er vor dem Schließen gespeichert werden?")
-            If mbresult = MessageBoxResult.OK Then
-                ApplicationCommands.Save.Execute(Nothing, Nothing)
-            End If
-        End If
-        If mbresult <> MessageBoxResult.Cancel Then
-            Dim WebCatAddr As String = DialogFactory.InputText(Me, AppCommands.OpenWebCat.Text, "Bitte Url eingeben", My.Settings.last_webcat, "")
-            If Not String.IsNullOrEmpty(WebCatAddr) Then
-                My.Settings.last_webcat = WebCatAddr
-                My.Settings.Save()
-
-                Dim newAppTitle As String = My.Application.Info.AssemblyName + " - "
-
-                Dim WebCatAddr_splits As String() = WebCatAddr.Split({":"}, StringSplitOptions.RemoveEmptyEntries)
-                If WebCatAddr_splits.Count > 1 Then
-                    Dim prefix As String = WebCatAddr_splits(0).ToUpper
-                    If prefix = "DOI" Then
-                        Using client As New Net.WebClient()
-                            Try
-                                Dim responseString As String = client.DownloadString("https://doi.org/api/handles/" + WebCatAddr_splits(1))
-                                Dim responseObject As Linq.JObject = JsonConvert.DeserializeObject(responseString)
-                                For Each o As Linq.JObject In From i In responseObject("values")
-                                    If o("type") = "URL" Then
-                                        WebCatAddr = o("data")("value")
-                                        Exit For
-                                    End If
-                                Next
-                                newAppTitle = newAppTitle + WebCatAddr + " (" + WebCatAddr_splits(1) + ")"
-                            Catch ex As Exception
-                                WebCatAddr = Nothing
-                                DialogFactory.MsgError(Me, "MD-Katalog öffnen", "Konnte DOI nicht auflösen:" + vbNewLine + ex.Message)
-                            End Try
-                        End Using
-                    Else
-                        newAppTitle = newAppTitle + WebCatAddr
-                    End If
-                Else
-                    newAppTitle = newAppTitle + WebCatAddr
-                End If
-                If Not String.IsNullOrEmpty(WebCatAddr) Then
-                    Try
-                        If XDocMCat IsNot Nothing Then
-                            RemoveHandler XDocMCat.Root.Changed, AddressOf Notify_XDocMCatChanged
-                        End If
-                        Using client As New Net.WebClient()
-                            Using mstream As New IO.MemoryStream(client.DownloadData(WebCatAddr))
-                                Using xmlR As System.Xml.XmlReader = System.Xml.XmlReader.Create(mstream)
-                                    XDocMCat = XDocument.Load(xmlR)
-                                End Using
-                            End Using
-                        End Using
-                        AddHandler XDocMCat.Root.Changed, AddressOf Notify_XDocMCatChanged
-                        XDocMCatChanged = False
-                        XDocMCatFilename = Nothing
-                        Me.Title = newAppTitle
-                        UpdateMDDefControls()
-                    Catch ex As Exception
-                        DialogFactory.MsgError(Me, "MD-Katalog öffnen", "Konnte Datei nicht öffnen:" + vbNewLine + ex.Message)
-                    End Try
-                End If
-            End If
-        End If
-    End Sub
-
     '#######################################################################
     Private Sub HandleAddMDDefExecuted(ByVal sender As Object, ByVal e As ExecutedRoutedEventArgs)
         If Me.XDocMCat IsNot Nothing Then
@@ -551,48 +544,6 @@ Class MainWindow
             End Using
 
             DialogFactory.Msg(Me, "DOI-Check", "Antwort: " + vbNewLine + myResponse)
-        End If
-    End Sub
-
-    Private Sub HandleNewCatalogFromOldExecuted(ByVal sender As Object, ByVal e As ExecutedRoutedEventArgs)
-        Dim mbresult As MessageBoxResult = MessageBoxResult.OK
-        If XDocMCatChanged Then
-            mbresult = DialogFactory.YesNoCancel(Me, My.Application.Info.AssemblyName, "Der Katalog wurde geändert. Soll er vor dem Schließen gespeichert werden?")
-            If mbresult = MessageBoxResult.OK Then
-                ApplicationCommands.Save.Execute(Nothing, Nothing)
-            End If
-        End If
-        If mbresult <> MessageBoxResult.Cancel Then
-            Dim fname As String = ""
-            Dim fdir As String = ""
-            If Not String.IsNullOrEmpty(My.Settings.last_oldcatfilename) Then
-                fname = IO.Path.GetFileName(My.Settings.last_oldcatfilename)
-                fdir = IO.Path.GetDirectoryName(My.Settings.last_oldcatfilename)
-            End If
-
-
-            Dim filepicker As New Microsoft.Win32.OpenFileDialog With {.FileName = fname, .Filter = "XML-ZIP-Dateien|*.zip", .InitialDirectory = fdir,
-                                                                           .DefaultExt = "Xml", .Title = "Alten MDR-Katalog öffnen"}
-            If filepicker.ShowDialog Then
-                My.Settings.last_oldcatfilename = filepicker.FileName
-                My.Settings.Save()
-
-                Try
-                    XDocMCat = MDR2MDC.TransformOld(filepicker.FileName)
-
-                    If XDocMCat IsNot Nothing Then
-                        RemoveHandler XDocMCat.Root.Changed, AddressOf Notify_XDocMCatChanged
-                    End If
-
-                    AddHandler XDocMCat.Root.Changed, AddressOf Notify_XDocMCatChanged
-                    XDocMCatChanged = False
-                    XDocMCatFilename = Nothing
-                    Me.Title = My.Application.Info.AssemblyName + " - [neu von alt]"
-                    UpdateMDDefControls()
-                Catch ex As Exception
-                    DialogFactory.MsgError(Me, "MD-Katalog öffnen", "Konnte Datei nicht öffnen:" + vbNewLine + ex.Message)
-                End Try
-            End If
         End If
     End Sub
 

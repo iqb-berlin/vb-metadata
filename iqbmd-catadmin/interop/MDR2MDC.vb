@@ -68,7 +68,7 @@
         Dim XProps As XElement = XOldCat.Root.<Properties>.FirstOrDefault
         If XProps IsNot Nothing Then
             For Each XProp As XElement In XProps.<Property>
-                If XProp.@public = "True" AndAlso XProp.@deprecated = "False" Then
+                If XProp.@public.ToUpper = "TRUE" AndAlso XProp.@deprecated.ToUpper = "FALSE" Then
                     Dim XMD As XElement = <MDDef/>
                     Dim XTypeSpec As XElement = Nothing
                     Debug.Print(XProp.@key)
@@ -79,6 +79,8 @@
                                         <Min>0</Min>
                                         <Seconds>True</Seconds>
                                     </TypeSpec>
+                    ElseIf XProp.@type = "linkfolder" Then
+                        XMD.@type = "folderlink"
                     Else
                         XMD.@type = XProp.@type
                         If XMD.@type = "listsingleselect" OrElse XMD.@type = "listmultiselect" Then

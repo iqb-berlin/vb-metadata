@@ -31,9 +31,7 @@
                        <Image Source="Resources/278796.png" Width="20"/>
                     </MenuItem.Header>
                     <MenuItem Command="local:AppCommands.NewCatalog"/>
-                    <MenuItem Command="local:AppCommands.NewCatalogFromOld"/>
-                    <MenuItem Command="Open" Header="Öffnen Katalog-Datei"/>
-                    <MenuItem Command="local:AppCommands.OpenWebCat"/>
+                    <MenuItem Command="Open" Header="Öffnen"/>
                     <MenuItem Command="local:AppCommands.SaveAs"/>
                     <Separator/>
                     <MenuItem Command="local:AppCommands.EditMDCoreCats"/>

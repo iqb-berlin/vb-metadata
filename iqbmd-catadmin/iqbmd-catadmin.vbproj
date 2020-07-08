@@ -7,25 +7,30 @@
     <ProjectTypeGuids>{60dc8134-eba5-43b8-bcc9-bb4bc16c2548};{F184B08F-C81C-45F6-A57F-5ABD9991F28F}</ProjectTypeGuids>
     <OutputType>WinExe</OutputType>
     <RootNamespace>iqb.md.catadmin</RootNamespace>
-    <AssemblyName>iqbmd-catadmin</AssemblyName>
+    <AssemblyName>IQB-MD-CatAdmin</AssemblyName>
     <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <MyType>Custom</MyType>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
     <Deterministic>true</Deterministic>
-    <PublishUrl>publish\</PublishUrl>
+    <IsWebBootstrapper>false</IsWebBootstrapper>
+    <PublishUrl>\\huiqb38c.user.hu-berlin.de\IQBInstitut\EDV\IQB-Apps\IQB-MD-CatAdmin\</PublishUrl>
     <Install>true</Install>
-    <InstallFrom>Disk</InstallFrom>
-    <UpdateEnabled>false</UpdateEnabled>
+    <InstallFrom>Unc</InstallFrom>
+    <UpdateEnabled>true</UpdateEnabled>
     <UpdateMode>Foreground</UpdateMode>
     <UpdateInterval>7</UpdateInterval>
     <UpdateIntervalUnits>Days</UpdateIntervalUnits>
     <UpdatePeriodically>false</UpdatePeriodically>
     <UpdateRequired>false</UpdateRequired>
     <MapFileExtensions>true</MapFileExtensions>
-    <ApplicationRevision>0</ApplicationRevision>
-    <ApplicationVersion>1.0.1.%2a</ApplicationVersion>
-    <IsWebBootstrapper>false</IsWebBootstrapper>
+    <TargetCulture>de</TargetCulture>
+    <ProductName>IQB-MD-CatAdmin</ProductName>
+    <PublisherName>IQB</PublisherName>
+    <OpenBrowserOnPublish>false</OpenBrowserOnPublish>
+    <ApplicationRevision>2</ApplicationRevision>
+    <ApplicationVersion>1.1.0.%2a</ApplicationVersion>
     <UseApplicationTrust>false</UseApplicationTrust>
+    <CreateDesktopShortcut>true</CreateDesktopShortcut>
     <PublishWizardCompleted>true</PublishWizardCompleted>
     <BootstrapperEnabled>true</BootstrapperEnabled>
   </PropertyGroup>
@@ -37,7 +42,7 @@
     <DefineTrace>true</DefineTrace>
     <IncrementalBuild>true</IncrementalBuild>
     <OutputPath>bin\Debug\</OutputPath>
-    <DocumentationFile>iqbmd-catadmin.xml</DocumentationFile>
+    <DocumentationFile>IQB-MD-CatAdmin.xml</DocumentationFile>
     <NoWarn>41999,42016,42017,42018,42019,42020,42021,42022,42032,42036,42314</NoWarn>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
@@ -49,7 +54,7 @@
     <IncrementalBuild>false</IncrementalBuild>
     <Optimize>true</Optimize>
     <OutputPath>bin\Release\</OutputPath>
-    <DocumentationFile>iqbmd-catadmin.xml</DocumentationFile>
+    <DocumentationFile>IQB-MD-CatAdmin.xml</DocumentationFile>
     <NoWarn>41999,42016,42017,42018,42019,42020,42021,42022,42032,42036,42314</NoWarn>
   </PropertyGroup>
   <PropertyGroup>
@@ -68,10 +73,11 @@
     <ApplicationIcon>Resources\iqbmdc.ico</ApplicationIcon>
   </PropertyGroup>
   <PropertyGroup>
-    <ManifestCertificateThumbprint>DDDAD5E44DF4D26E68CC4F659C125231253E35D8</ManifestCertificateThumbprint>
+    <ManifestCertificateThumbprint>3851AD09984FB13342EFC425BBE29115D7914A99</ManifestCertificateThumbprint>
   </PropertyGroup>
   <PropertyGroup>
-    <ManifestKeyFile>iqbmd-catadmin_TemporaryKey.pfx</ManifestKeyFile>
+    <ManifestKeyFile>
+    </ManifestKeyFile>
   </PropertyGroup>
   <PropertyGroup>
     <GenerateManifests>true</GenerateManifests>
@@ -81,6 +87,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System.Core" />
+    <Reference Include="System.Deployment" />
     <Reference Include="System.Drawing" />
     <Reference Include="System.IO.Compression" />
     <Reference Include="System.Xml.Linq" />
@@ -103,11 +110,15 @@
     </ApplicationDefinition>
     <Compile Include="AppCommands.vb" />
     <Compile Include="Converters.vb" />
+    <Compile Include="dialogs\OpenCatDialog.xaml.vb">
+      <DependentUpon>OpenCatDialog.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="dialogs\uri.class.vb" />
     <Compile Include="interop\MDR2MDC.vb" />
     <Compile Include="TestMDControlsDialog.xaml.vb">
       <DependentUpon>TestMDControlsDialog.xaml</DependentUpon>
     </Compile>
-    <Compile Include="EditCatCoreDataDialog.xaml.vb">
+    <Compile Include="dialogs\EditCatCoreDataDialog.xaml.vb">
       <DependentUpon>EditCatCoreDataDialog.xaml</DependentUpon>
     </Compile>
     <Compile Include="TextMultiLanguageControl.xaml.vb">
@@ -134,11 +145,15 @@
       <DependentUpon>UnknownTypeDefControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="typecontrols\ValidationRules.vb" />
+    <Page Include="dialogs\OpenCatDialog.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
     <Page Include="TestMDControlsDialog.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="EditCatCoreDataDialog.xaml">
+    <Page Include="dialogs\EditCatCoreDataDialog.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
@@ -225,7 +240,6 @@
       <LastGenOutput>Resources.Designer.vb</LastGenOutput>
       <CustomToolNamespace>My.Resources</CustomToolNamespace>
     </EmbeddedResource>
-    <None Include="iqbmd-catadmin_TemporaryKey.pfx" />
     <None Include="My Project\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.vb</LastGenOutput>
