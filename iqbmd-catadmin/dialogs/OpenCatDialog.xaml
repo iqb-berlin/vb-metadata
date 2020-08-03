@@ -32,7 +32,7 @@
                             <TextBlock TextWrapping="Wrap">Metadaten-Katalog http (z. B. GitHub raw)</TextBlock>
                         </RadioButton.Content>
                     </RadioButton>
-                    <RadioButton GroupName="uriType" Name="RBfs2006" IsEnabled="False">Metadaten-Katalog 2006 - Datei</RadioButton>
+                    <RadioButton GroupName="uriType" Name="RBfs2006">Metadaten-Katalog 2006 - Datei</RadioButton>
                 </StackPanel>
             </DockPanel>
             <TextBlock DockPanel.Dock="Top" Margin="0 10 0 5">IQB-Auswahl</TextBlock>    

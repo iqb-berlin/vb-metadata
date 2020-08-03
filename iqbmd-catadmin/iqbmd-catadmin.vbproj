@@ -27,8 +27,8 @@
     <ProductName>IQB-MD-CatAdmin</ProductName>
     <PublisherName>IQB</PublisherName>
     <OpenBrowserOnPublish>false</OpenBrowserOnPublish>
-    <ApplicationRevision>2</ApplicationRevision>
-    <ApplicationVersion>1.1.0.%2a</ApplicationVersion>
+    <ApplicationRevision>1</ApplicationRevision>
+    <ApplicationVersion>1.2.0.%2a</ApplicationVersion>
     <UseApplicationTrust>false</UseApplicationTrust>
     <CreateDesktopShortcut>true</CreateDesktopShortcut>
     <PublishWizardCompleted>true</PublishWizardCompleted>
@@ -114,6 +114,7 @@
       <DependentUpon>OpenCatDialog.xaml</DependentUpon>
     </Compile>
     <Compile Include="dialogs\uri.class.vb" />
+    <Compile Include="interop\Props2MDC.vb" />
     <Compile Include="interop\MDR2MDC.vb" />
     <Compile Include="TestMDControlsDialog.xaml.vb">
       <DependentUpon>TestMDControlsDialog.xaml</DependentUpon>

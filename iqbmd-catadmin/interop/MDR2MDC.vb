@@ -2,29 +2,16 @@
     Private Const CatFilename = "cat.xml"
     Private Const UIFilename = "ui.xml"
 
-    Private Shared Function ZipBytesToXDoc(ByRef BSource As Byte()) As XDocument
-        Dim myXDoc As XDocument = Nothing
-        Using mstream As New IO.MemoryStream(BSource)
-            Using zipstream As New IO.Compression.GZipStream(mstream, IO.Compression.CompressionMode.Decompress)
-                Using myXReader As System.Xml.XmlReader = System.Xml.XmlReader.Create(zipstream,
-                                        New System.Xml.XmlReaderSettings With {.IgnoreWhitespace = True})
-                    myXDoc = XDocument.Load(myXReader, LoadOptions.None)
-                End Using
-            End Using
-        End Using
-        Return myXDoc
-    End Function
-
     Public Shared Function TransformOld(OldFName As String) As XDocument
         Dim myreturn As XDocument = <?xml version="1.0" encoding="utf-8"?>
                                     <MDCat xsi:noNamespaceSchemaLocation="http://raw.githubusercontent.com/iqb-mdc/core/master/mdc.xsd"
                                         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
                                         id=""
-                                        version="" versionhistory="">
+                                        version="1.0.0" versionhistory="">
+                                        <Label xml:lang="de">Katalog des IQB</Label>
                                         <Owner xml:lang="de">IQB - Institut zur Qualitätsentwicklung im Bildungswesen</Owner>
                                         <Owner xml:lang="en">IQB - Institute for Educational Quality Improvement</Owner>
                                         <License>MIT</License>
-                                        <DefaultMDDefMetadata/>
                                     </MDCat>
 
         Dim XOldCat As XDocument = Nothing
@@ -77,7 +64,7 @@
                         XMD.@type = "integer"
                         XTypeSpec = <TypeSpec>
                                         <Min>0</Min>
-                                        <Seconds>True</Seconds>
+                                        <Seconds>true</Seconds>
                                     </TypeSpec>
                     ElseIf XProp.@type = "linkfolder" Then
                         XMD.@type = "folderlink"

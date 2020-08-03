@@ -334,6 +334,23 @@ Class MainWindow
                         DialogFactory.MsgError(Me, "MD-Katalog öffnen", "Konnte Datei nicht öffnen:" + vbNewLine + ex.Message)
                     End Try
 
+                ElseIf selectionConfig.type = "fs2006" Then
+                    Try
+                        XDocMCat = Props2MDC.TransformOld(selectionConfig.ref)
+
+                        If XDocMCat IsNot Nothing Then
+                            RemoveHandler XDocMCat.Root.Changed, AddressOf Notify_XDocMCatChanged
+                        End If
+
+                        AddHandler XDocMCat.Root.Changed, AddressOf Notify_XDocMCatChanged
+                        XDocMCatChanged = False
+                        XDocMCatFilename = Nothing
+                        Me.Title = My.Application.Info.AssemblyName + " - [neu von alt]"
+                        UpdateMDDefControls()
+                    Catch ex As Exception
+                        DialogFactory.MsgError(Me, "MD-Katalog öffnen", "Konnte Datei nicht öffnen:" + vbNewLine + ex.Message)
+                    End Try
+
                 End If
             End If
         End If
