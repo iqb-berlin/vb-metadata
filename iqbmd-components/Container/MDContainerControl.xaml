@@ -10,9 +10,10 @@
              d:DesignHeight="300" d:DesignWidth="200">
     <DockPanel>
         <DockPanel.Resources>
+            <libcomp:BooleanNotVisibilityConverter x:Key="BooleanNotVisibilityConverter"/>
             <libcomp:BooleanVisibilityConverter x:Key="BooleanVisibilityConverter"/>
         </DockPanel.Resources>
-        <DockPanel DockPanel.Dock="Top" LastChildFill="False">
+        <DockPanel DockPanel.Dock="Top" LastChildFill="False" Visibility="{Binding RelativeSource={RelativeSource AncestorType={x:Type local:MDContainerControl}}, Path=IsReadOnly, Mode=OneWay, Converter={StaticResource BooleanNotVisibilityConverter}}">
             <libcomp:ButtonNewSmall Command="local:MDContainerControl.AddMD" Margin="2" ToolTip="Neue Eigenschaft hinzufügen" Panel.ZIndex="1"/>
             <libcomp:ButtonDeleteSmall Command="local:MDContainerControl.RemoveMD" VerticalAlignment="Center" ToolTip="Eigenschaft entfernen" Panel.ZIndex="2"/>
             <libcomp:ButtonEditSmall Command="local:MDContainerControl.EditDefault" VerticalAlignment="Center" 

@@ -1,0 +1,10 @@
+﻿<local:MDBasisControl x:Class="SecondsEdit" HorizontalAlignment="Left"
+                      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                      xmlns:libcomp="clr-namespace:iqb.lib.components;assembly=iqblib-components"
+                      xmlns:local="clr-namespace:iqb.md.components">
+    <local:MDBasisControl.Resources>
+        <libcomp:StringIntegerConverter x:Key="StringIntegerConverter"/>
+    </local:MDBasisControl.Resources>
+    <libcomp:TimeEditUserControl Value="{Binding XMD.Value, UpdateSourceTrigger=PropertyChanged}" IsReadOnly="False"/>
+</local:MDBasisControl>

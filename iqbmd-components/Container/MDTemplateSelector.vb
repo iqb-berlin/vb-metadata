@@ -30,7 +30,14 @@ Public Class MDTemplateSelector
                         End If
 
                     Case "integer"
-                        If Not IsReadOnly Then myControlTypeKey = "NumericEditIntegerControl"
+                        If Not IsReadOnly Then
+                            myControlTypeKey = "NumericEditIntegerControl"
+                            If myTypeDef.ContainsKey("Seconds") Then
+                                If myTypeDef.Item("Seconds").ToUpper = "TRUE" Then
+                                    myControlTypeKey = "SecondsEdit"
+                                End If
+                            End If
+                        End If
 
                     Case "decimal"
                         If Not IsReadOnly Then myControlTypeKey = "NumericEditDoubleControl"

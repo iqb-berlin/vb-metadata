@@ -105,6 +105,9 @@
     <Compile Include="EditControls\RadioButtonsFloatControl.xaml.vb">
       <DependentUpon>RadioButtonsFloatControl.xaml</DependentUpon>
     </Compile>
+    <Compile Include="EditControls\SecondsEdit.xaml.vb">
+      <DependentUpon>SecondsEdit.xaml</DependentUpon>
+    </Compile>
     <Compile Include="EditControls\TextEditControl.xaml.vb">
       <DependentUpon>TextEditControl.xaml</DependentUpon>
     </Compile>
@@ -168,6 +171,10 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Include="EditControls\RadioButtonsFloatControl.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="EditControls\SecondsEdit.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
