@@ -15,7 +15,7 @@ Imports System.Windows
 <Assembly: AssemblyDescription("Metadaten-System des IQB: Controls und Dialoge zur Verwendung in anderen Anwendungen")>
 <Assembly: AssemblyCompany("IQB Berlin")>
 <Assembly: AssemblyProduct("iqbmd_components")>
-<Assembly: AssemblyCopyright("IQB @ 2019, 2021")>
+<Assembly: AssemblyCopyright("IQB @ 2019, 2022")>
 <Assembly: AssemblyTrademark("")> 
 <Assembly: ComVisible(false)>
 
@@ -55,5 +55,5 @@ Imports System.Windows
 ' by using the '*' as shown below:
 ' <Assembly: AssemblyVersion("1.0.*")>
 
-<Assembly: AssemblyVersion("1.4.0.0")>
-<Assembly: AssemblyFileVersion("1.4.0.0")>
+<Assembly: AssemblyVersion("1.5.0.0")>
+<Assembly: AssemblyFileVersion("1.5.0.0")>
