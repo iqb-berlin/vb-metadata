@@ -141,7 +141,7 @@ Public Class MDCFactory
         Dim myCat As MDCat = GetMDC(cat)
         If myCat IsNot Nothing Then
             myreturn = myCat.GetMDInfo(def, LanguageKey)
-            myreturn.CatId = cat
+            If myreturn IsNot Nothing Then myreturn.CatId = cat
         End If
 
         Return myreturn
